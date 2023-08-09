@@ -25,7 +25,7 @@ class TodoTest {
 
     @Test
     void testSetCompleted() {
-        todo.setCompleted(false);
+        todo.setCompleted(true);
         assertTrue(todo.isCompleted());
     }
 

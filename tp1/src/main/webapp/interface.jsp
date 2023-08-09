@@ -3,12 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chatons !</title>
+    <title>TODOs</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-    <h1 class="header-titre">Chatons.org</h1>
+    <h1 class="header-titre">MIF TODOs</h1>
     <p class="header-user">Bonjour <strong>${sessionScope.user.login}</strong>,<br>
         il y a actuellement <%=((Map<?, ?>) (application.getAttribute("users"))).size()%> utilisateur(s) connect&eacute;(s).</p>
 </header>
@@ -23,12 +23,12 @@
     </aside>
 
     <article class="contenu">
-        <h2>list</h2>
+        <h2>liste des TODOs</h2>
         <iframe src="todolist" name="list" style="border: none; width: 100%; height: 300px;"></iframe>
         <hr>
         <form method="post" action="todolist" target="list">
             <p>
-                Message :
+                Ajouter un TODO :
                 <label>
                     <input type="text" name="title">
                 </label>
