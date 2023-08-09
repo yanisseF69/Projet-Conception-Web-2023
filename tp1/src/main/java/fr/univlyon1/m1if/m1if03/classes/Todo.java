@@ -1,32 +1,36 @@
 package fr.univlyon1.m1if.m1if03.classes;
 
+import java.util.Date;
+import java.util.Objects;
+
 /**
  * TODOs créés par les utilisateurs.
- * Un Todos comporte un titre, un statut (à faire ou fait)
- * et l'id du dernier utilisateur qui l'a créé ou modifié.
+ * Un TODO_ comporte un titre et un statut (à faire ou fait).
+ * Pour le créer, il faut indiquer l'id de l'utilisateur qui l'a créé.
  */
 public class Todo {
-    private final String title;
-    private String lastUser;
-    private final String title;
+    private final int hash;
+    private String title;
     private boolean completed;
 
-    public Todo(String title, String lastUser) {
-        this.lastUser = lastUser;
+    /**
+     * Création d'un TODO_
+     * @param title Texte indiqué dans le TODO_
+     * @param creator Login de l'utilisateur créateur
+     */
+    public Todo(String title, String creator) {
         this.title = title;
         this.completed = false;
+        // On rassemble toutes les infos sur l'instance, pour permettre de les distinguer
+        this.hash = Objects.hash(title, creator, (new Date()).getTime());
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getLastUser() {
-        return lastUser;
-    }
-
-    public void setLastUser(String lastUser) {
-        this.lastUser = lastUser;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public boolean isCompleted() {
@@ -35,5 +39,18 @@ public class Todo {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Todo todo = (Todo) o;
+        return this.hashCode() == todo.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hash;
     }
 }

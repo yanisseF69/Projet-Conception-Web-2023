@@ -2,35 +2,46 @@ package fr.univlyon1.m1if.m1if03.classes;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TodoTest {
     private final Todo todo = new Todo("test TODO", "toto");
 
     @Test
-    void getTitle() {
+    void testGetTitle() {
         assertEquals(todo.getTitle(), "test TODO");
     }
 
     @Test
-    void getLastUser() {
-        assertEquals(todo.getLastUser(), "toto");
+    void testSetTitle() {
+        todo.setTitle("new title");
+        assertEquals(todo.getTitle(), "new title");
     }
 
     @Test
-    void setLastUser() {
-        todo.setLastUser("titi");
-        assertEquals(todo.getTitle(), "test message 2");
+    void testIsCompleted() {
+        assertFalse(todo.isCompleted());
     }
 
     @Test
-    void isCompleted() {
-        assertEquals(todo.isCompleted(), false);
-    }
-
-    @Test
-    void setCompleted() {
+    void testSetCompleted() {
         todo.setCompleted(false);
-        assertEquals(todo.isCompleted(), true);
+        assertTrue(todo.isCompleted());
+    }
+
+    @Test
+    void testEquals() {
+        Todo todo2 = new Todo("test todo 2", "titi");
+        assertFalse(todo.equals(todo2));
+    }
+
+    @Test
+    void testHashCode() {
+        try {
+            Integer h = todo.hashCode();
+            assertNotEquals(h, 0);
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cette servlet gère la conversation dans le chat.
- * Elle récupère les nouveaux messages et affiche la liste des messages.
+ * Cette servlet gère la liste des TODOs.
+ * Elle permet actuellement d'afficher la liste et de créer de nouveaux TODOs.
+ * Elle devra aussi permettre de modifier l'état d'un TODO_
  */
-@WebServlet(name = "Conversation", value = "/conversation")
-public class Conversation extends HttpServlet {
+@WebServlet(name = "TodoList", value = "/todolist")
+public class TodoList extends HttpServlet {
     private final List<Todo> todos = new ArrayList<>();
 
     @Override
@@ -34,8 +35,18 @@ public class Conversation extends HttpServlet {
                 "</head>\n" +
                 "<body>\n" +
                 "    <table>");
-        for(Todo m: todos) {
-            out.println("        <tr><td><em>" + m.getLastUser() + "</em>:</td><td>" + m.getTitle() + "</td></tr>");
+        for(Todo t: todos) {
+            out.println("        <form action='/updateTodo' method='POST'>");
+            out.write("          <tr><td><em>" + (t.isCompleted()?"&#x2611;":"&#x2610;") + "</em></td>");
+            out.write("<td><em>" + t.getTitle() + "</em></td>");
+            if(t.isCompleted()) {
+                out.write("<td><input type='submit' name='toggle' value='Not done!'></td>");
+            } else {
+                out.write("<td><input type='submit' name='toggle' value='Done!'></td>");
+            }
+            out.println("</tr>");
+            out.println("          </input type='hidden' name='todo' value=" + t.hashCode() +">");
+            out.println("        </form>");
         }
         out.write("    </table>\n" +
                 "</body>\n" +
@@ -44,9 +55,9 @@ public class Conversation extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // crée un nouveau message et l'ajoute à la liste
-        Todo m = new Todo(request.getParameter("login"), request.getParameter("text"));
-        todos.add(m);
+        // crée un nouveau TODO_ et l'ajoute à la liste
+        Todo t = new Todo(request.getParameter("title"), request.getParameter("login"));
+        todos.add(t);
         // Reprend le comportement des requêtes GET
         doGet(request, response);
     }

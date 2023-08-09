@@ -10,27 +10,28 @@
 <header>
     <h1 class="header-titre">Chatons.org</h1>
     <p class="header-user">Bonjour <strong>${sessionScope.user.login}</strong>,<br>
-        il y a actuellement <%=((Map) (application.getAttribute("users"))).size()%> utilisateur(s) connect&eacute;(s).</p>
+        il y a actuellement <%=((Map<?, ?>) (application.getAttribute("users"))).size()%> utilisateur(s) connect&eacute;(s).</p>
 </header>
 
 <div class="wrapper">
     <aside class="menu">
         <h2>Menu</h2>
         <div>
-            <a href="user.jsp">Mon compte</a>
-            <br>
+            <!-- TODO -->
             <a href="deco">D&eacute;connexion</a>
         </div>
     </aside>
 
     <article class="contenu">
-        <h2>Conversation</h2>
-        <iframe src="conversation" name="conversation" style="border: none; width: 100%; height: 300px;"></iframe>
+        <h2>list</h2>
+        <iframe src="todolist" name="list" style="border: none; width: 100%; height: 300px;"></iframe>
         <hr>
-        <form method="post" action="conversation" target="conversation">
+        <form method="post" action="todolist" target="list">
             <p>
                 Message :
-                <input type="text" name="text">
+                <label>
+                    <input type="text" name="title">
+                </label>
                 <input type="submit" value="Envoyer">
                 <input type="hidden" name="login" value="${sessionScope.user.login}">
             </p>

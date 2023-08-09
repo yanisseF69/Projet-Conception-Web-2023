@@ -17,9 +17,9 @@ import java.util.Map;
 
 /**
  * Cette servlet récupère les infos de l'utilisateur dans sa session et affiche l'interface du chat (sans modifier l'URL).
- * &Agrave; noter le fait que l'URL à laquelle elle répond ("/chat") n'est pas le nom de la servlet.
+ * &Agrave; noter le fait que l'URL à laquelle elle répond ("/todos") n'est pas le nom de la servlet.
  */
-@WebServlet(name = "Connect", value = "/chat")
+@WebServlet(name = "Connect", value = "/todos")
 public class Connect extends HttpServlet {
     // Map d'objets User destinée à être stockée dans le contexte applicatif et à être accédée par tous les objets de l'application
     private final Map<String, User> users = new HashMap<>();
@@ -49,7 +49,7 @@ public class Connect extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Ceci est une redirection HTTP ; le client est informé qu'il doit requêter une auter ressource
+        // Ceci est une redirection HTTP ; le client est informé qu'il doit requêter une autre ressource
         response.sendRedirect("index.html");
     }
 }
