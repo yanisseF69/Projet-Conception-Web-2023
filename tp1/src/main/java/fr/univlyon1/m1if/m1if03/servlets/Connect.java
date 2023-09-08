@@ -12,23 +12,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Cette servlet récupère les infos de l'utilisateur dans sa session et affiche l'interface du chat (sans modifier l'URL).
+ * Cette servlet initialise les objets communs à toute l'application,
+ * récupère les infos de l'utilisateur pour les placer dans sa session
+ * et affiche l'interface du chat (sans modifier l'URL).
  * &Agrave; noter le fait que l'URL à laquelle elle répond ("/todos") n'est pas le nom de la servlet.
  */
 @WebServlet(name = "Connect", value = "/todos")
 public class Connect extends HttpServlet {
-    // Map d'objets User destinée à être stockée dans le contexte applicatif et à être accédée par tous les objets de l'application
+    // Variables communes pour toute l'application (remplacent la BD).
+    // Elles seront stockées dans le contexte applicatif pour pouvoir être accédées par tous les objets de l'application :
+
+    // Map d'objets User
     private final Map<String, User> users = new HashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         // Cette instruction doit toujours être au début de la méthode init() pour pouvoir accéder à l'objet config.
         super.init(config);
-        //Récupère le contexte applicatif et y place la map d'User
+        //Récupère le contexte applicatif et y place les variables globales
         ServletContext context = config.getServletContext();
         context.setAttribute("users", users);
     }

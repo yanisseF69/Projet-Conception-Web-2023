@@ -41,7 +41,7 @@ public class Auth extends HttpFilter {
 
         // Traite les formulaires d'authentification
         String login = request.getParameter("login");
-        if(request.getMethod().equals("POST") && login != null && !login.equals("")) {
+        if(request.getMethod().equals("POST") && login != null && !login.isEmpty()) {
             // Gestion de la session utilisateur
             HttpSession session = request.getSession(true);
             session.setAttribute("user", new User(login, request.getParameter("name")));

@@ -32,7 +32,7 @@ class TodoTest {
     @Test
     void testEquals() {
         Todo todo2 = new Todo("test todo 2", "titi");
-        assertFalse(todo.equals(todo2));
+        assertNotEquals(todo, todo2);
     }
 
     @Test

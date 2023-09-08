@@ -9,7 +9,7 @@
 <body>
 <header>
     <h1 class="header-titre">MIF TODOs</h1>
-    <p class="header-user">Bonjour <strong>${sessionScope.user.login}</strong>,<br>
+    <p class="header-user">Bonjour <strong><a href="user.jsp">${sessionScope.user.login}</a></strong>,<br>
         il y a actuellement <%=((Map<?, ?>) (application.getAttribute("users"))).size()%> utilisateur(s) connect&eacute;(s).</p>
 </header>
 
@@ -33,6 +33,7 @@
                     <input type="text" name="title">
                 </label>
                 <input type="submit" value="Envoyer">
+                <input type="hidden" name="operation" value="add">
                 <input type="hidden" name="login" value="${sessionScope.user.login}">
             </p>
         </form>
