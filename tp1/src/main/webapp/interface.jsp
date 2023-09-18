@@ -1,6 +1,13 @@
 <%@ page import="java.util.Map" %>
+<%@ page import="fr.univlyon1.m1if.m1if03.classes.User" %>
+
 <!DOCTYPE html>
+
+<jsp:useBean id="user" beanName="user" scope="session"
+             type="fr.univlyon1.m1if.m1if03.classes.User"/>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>TODOs</title>
@@ -9,7 +16,11 @@
 <body>
 <header>
     <h1 class="header-titre">MIF TODOs</h1>
-    <p class="header-user">Bonjour <strong><a href="user.jsp">${sessionScope.user.login}</a></strong>,<br>
+
+
+    <p class="header-user">Bonjour <strong><a href="user.jsp">
+        ${user.name}
+    </a></strong>,<br>
         il y a actuellement <%=((Map<?, ?>) (application.getAttribute("users"))).size()%> utilisateur(s) connect&eacute;(s).</p>
 </header>
 
@@ -18,6 +29,7 @@
         <h2>Menu</h2>
         <div>
             <!-- TODO -->
+            <a href="modify.jsp">Modifier son compte</a></br>
             <a href="deco">D&eacute;connexion</a>
         </div>
     </aside>

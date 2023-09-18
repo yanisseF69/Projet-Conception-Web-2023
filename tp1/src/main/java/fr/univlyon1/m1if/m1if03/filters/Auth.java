@@ -34,7 +34,13 @@ public class Auth extends HttpFilter {
         // Note :
         //   le paramètre false dans request.getSession(false) permet de récupérer null si la session n'est pas déjà créée.
         //   Sinon, l'appel de la méthode getSession() la crée automatiquement.
-        if(url.equals("/") || url.equals("/index.html") || request.getSession(false) != null) {
+        HttpSession sexion = request.getSession(false);
+        if(url.equals("/") || url.equals("/index.html") || url.equals("/css/style.css") || sexion != null) {
+            String name = request.getParameter("name");
+            if(request.getMethod().equals("POST") && name != null && !name.isEmpty() ){
+                sexion.setAttribute("user", new User(request.getParameter("login"), name));
+
+            }
             chain.doFilter(request, response);
             return;
         }
