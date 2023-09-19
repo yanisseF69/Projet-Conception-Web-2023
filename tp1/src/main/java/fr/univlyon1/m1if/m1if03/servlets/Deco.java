@@ -34,7 +34,13 @@ public class Deco extends HttpServlet {
         HttpSession session = request.getSession(false);
         if(session != null){
 
+            User user = (User) session.getAttribute("user");
             session.removeAttribute("user");
+
+            ServletContext context = getServletContext();
+            Map<String, User> users = (Map<String, User>) context.getAttribute("users");
+            users.remove(user.getLogin());
+            context.setAttribute("users",users);
 
             session.invalidate();
 
