@@ -15,7 +15,7 @@ variables:
     # ignores the $http_proxy & friends variable => write a
     # configuration file that does this for us.
 #    - setup-mvn-proxy.sh
-    - chmod 400 $CI_SSH_KEY
+#    - chmod 400 $CI_SSH_KEY
     # Useful only for debugging
     #- cat ~/.m2/settings.xml
   script:
