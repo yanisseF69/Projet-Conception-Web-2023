@@ -8,22 +8,23 @@ cache:
     - .m2/repository
   
 
-image: maven:3.6.1-jdk-11 # docker image with Maven
-
-
 
 variables:
   # Use the cached directory above.
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
-before_script:
-  - ./setup-mvn-proxy.sh
-  - chmod 400 $CI_SSH_KEY
-  # Useful only for debugging
-  #- cat ~/.m2/settings.xml
+junit:
+  image: maven:3.6.1-jdk-11 # docker image with Maven
 
-jobs:
-  script:
-    - cd ./tp1
-    - mvn clean package
-    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/todos.war gitlabci@192.168.75.47:8080/opt/tomcat/webapps/todos.war
+
+  before_script:
+    - ./setup-mvn-proxy.sh
+    - chmod 400 $CI_SSH_KEY
+    # Useful only for debugging
+    #- cat ~/.m2/settings.xml
+
+  jobs:
+    script:
+      - cd ./tp1
+      - mvn clean package
+      - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/todos.war gitlabci@192.168.75.47:8080/opt/tomcat/webapps/todos.war
