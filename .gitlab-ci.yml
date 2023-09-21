@@ -9,6 +9,8 @@ cache:
   
 
 image: maven:latest # docker image with Maven
+image: adoptopenjdk/openjdk18:latest
+
 
 variables:
   # Use the cached directory above.
