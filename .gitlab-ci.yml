@@ -13,7 +13,11 @@ variables:
   # Use the cached directory above.
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
-junit:
+deploy:
+
+  only:
+    - main
+
   image: maven:3.8.5-openjdk-18 # docker image with Maven
 
 
