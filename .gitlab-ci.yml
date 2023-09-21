@@ -14,7 +14,7 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
 junit:
-  image: maven:3.6.1-jdk-18 # docker image with Maven
+  image: maven:3.8.5-openjdk-18 # docker image with Maven
 
 
   before_script:
