@@ -1,0 +1,14 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  before_script:
+    - chmod 400 $CI_SSH_KEY
+    - ./setup-mvn-proxy.sh # Assurez-vous que ce script est présent dans votre projet
+  script:
+    - cd .
+    - mvn clean package
+    - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/todos.war gitlabci@192.168.75.47:8080/opt/tomcat/webapps/todos.war
