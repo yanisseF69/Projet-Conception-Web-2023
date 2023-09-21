@@ -19,7 +19,7 @@ junit:
 
   before_script:
     - ./setup-mvn-proxy.sh
-    - chmod 600 $CI_SSH_KEY
+    - chmod 400 $CI_SSH_KEY
     # Useful only for debugging
     #- cat ~/.m2/settings.xml
 
