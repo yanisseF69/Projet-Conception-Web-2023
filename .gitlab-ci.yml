@@ -8,7 +8,7 @@ cache:
     - .m2/repository
   
 
-image: maven:3.6.1-jdk-11 # docker image with Maven
+image: maven:latest # docker image with Maven
 
 variables:
   # Use the cached directory above.
