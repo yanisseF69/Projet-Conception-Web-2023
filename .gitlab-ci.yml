@@ -8,8 +8,8 @@ cache:
     - .m2/repository
   
 
-image: maven:latest # docker image with Maven
-image: adoptopenjdk/openjdk18:latest
+image: maven:3.6.1-jdk-11 # docker image with Maven
+
 
 
 variables:
@@ -24,8 +24,6 @@ before_script:
 
 jobs:
   script:
-    - export JAVA_HOME=/opt/java/openjdk
     - cd ./tp1
-    - mvn clean compile --batch-mode -Dmaven.compiler.source=18 -Dmaven.compiler.target=18 --enable-preview
     - mvn clean package
     - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/todos.war gitlabci@192.168.75.47:8080/opt/tomcat/webapps/todos.war
