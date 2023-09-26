@@ -29,16 +29,15 @@
         <h2>Menu</h2>
         <div>
             <!-- TODO -->
-            <a href="modify.jsp">Modifier son compte</a></br>
             <a href="deco">D&eacute;connexion</a>
         </div>
     </aside>
 
     <article class="contenu">
         <h2>liste des TODOs</h2>
-        <iframe src="todolist" name="list" style="border: none; width: 100%; height: 300px;"></iframe>
+        <iframe src="todolist" name="todolist_frame" style="border: none; width: 100%; height: 300px;"></iframe>
         <hr>
-        <form method="post" action="todolist" target="list">
+        <form method="post" action="todolist" target="todolist_frame">
             <p>
                 Ajouter un TODO :
                 <label>
