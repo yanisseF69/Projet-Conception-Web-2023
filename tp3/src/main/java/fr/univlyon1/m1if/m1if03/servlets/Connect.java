@@ -24,6 +24,8 @@ import java.util.ArrayList;
  *
  * @author Lionel Médini
  */
+
+/*
 @WebServlet(name = "Connect", urlPatterns = {"/connect"})
 public class Connect extends HttpServlet {
     // Elles seront stockées dans le contexte applicatif pour pouvoir être accédées par tous les objets de l'application :
@@ -65,6 +67,31 @@ public class Connect extends HttpServlet {
         // Note :
         //     il existe deux méthodes pour transférer une requête (et une réponse) à l'aide d'un RequestDispatcher : include et forward
         //     voir les différences ici : https://docs.oracle.com/javaee/6/tutorial/doc/bnagi.html
+        request.getRequestDispatcher("interface.jsp").forward(request, response);
+    }
+}
+*/
+
+@WebServlet(name = "Connect", urlPatterns = {"/connect"})
+public class Connect extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Récupère le DAO d'utilisateurs à partir du contexte
+        ServletContext context = getServletContext();
+        Dao<User> users = (Dao<User>) context.getAttribute("users");
+
+        User user = new User(request.getParameter("login"), request.getParameter("name"));
+        try {
+            users.add(user);
+        } catch (NameAlreadyBoundException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
+            return;
+        }
+        response.sendRedirect("interface.jsp");
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.getRequestDispatcher("interface.jsp").forward(request, response);
     }
 }
