@@ -1,11 +1,8 @@
 package fr.univlyon1.m1if.m1if03.servlets;
 
-import fr.univlyon1.m1if.m1if03.classes.Todo;
 import fr.univlyon1.m1if.m1if03.classes.User;
 
 import fr.univlyon1.m1if.m1if03.daos.Dao;
-import fr.univlyon1.m1if.m1if03.daos.UserDao;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,17 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.naming.InvalidNameException;
 import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-/**
- * Cette servlet initialise les objets communs à toute l'application,
- * récupère les infos de l'utilisateur pour les placer dans sa session
- * et affiche l'interface du chat.
- *
- * @author Lionel Médini
- */
+
 
 /*
 @WebServlet(name = "Connect", urlPatterns = {"/connect"})
@@ -73,6 +65,13 @@ public class Connect extends HttpServlet {
 }
 */
 
+/**
+ * Cette servlet initialise les objets communs à toute l'application,
+ * récupère les infos de l'utilisateur pour les placer dans sa session
+ * et affiche l'interface du chat.
+ *
+ * @author Lionel Médini
+ */
 @WebServlet(name = "Connect", urlPatterns = {"/connect"})
 public class Connect extends HttpServlet {
     @Override
@@ -106,14 +105,21 @@ public class Connect extends HttpServlet {
 
             if ("logout".equals(operation)) {
                 HttpSession session = request.getSession(false);
-                if (session != null) {
+
+                String login = (String) session.getAttribute("login");
                     session.invalidate();
+                try {
+                    ((Dao<User>) this.getServletContext().getAttribute("users")).deleteById(login);
+                } catch (NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidNameException e) {
+                    throw new RuntimeException(e);
                 }
                 response.sendRedirect("index.html");
+
             } else {
                 request.getRequestDispatcher("interface.jsp").forward(request, response);
             }
         }
     }
-
 

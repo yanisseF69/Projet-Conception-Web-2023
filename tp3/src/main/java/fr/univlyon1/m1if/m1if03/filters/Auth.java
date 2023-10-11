@@ -12,13 +12,13 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 
+
 /**
  * Filtre d'authentification.
  * N'autorise l'accès qu'aux clients ayant déjà une session existante ou ayant rempli le formulaire de la page <code>index.html</code>.
  * Dans ce dernier cas, le filtre crée la session de l'utilisateur, crée un objet User et l'ajoute en attribut de la session.
  * Laisse toutefois passer les URLs "/" et "/index.html".
  */
-/*
 @WebFilter(filterName = "Auth", urlPatterns = {"*"})
 public class Auth extends HttpFilter {
     private final String[] whiteList = {"/", "/index.html", "/css/style.css"};
@@ -58,8 +58,10 @@ public class Auth extends HttpFilter {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Vous devez vous connecter pour accéder au site.");
     }
 }
-*/
 
+
+
+/*
 @WebFilter(filterName = "Auth", urlPatterns = {"*"})
 public class Auth extends HttpFilter {
     private final String[] whiteList = {"/", "/index.html", "/css/style.css"};
@@ -85,3 +87,4 @@ public class Auth extends HttpFilter {
         }
     }
 }
+*/
