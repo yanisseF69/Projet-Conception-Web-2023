@@ -17,6 +17,7 @@ import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@WebServlet(name = "Init", value = "/init", loadOnStartup=1)
 public class Init extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {

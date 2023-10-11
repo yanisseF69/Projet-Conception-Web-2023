@@ -18,6 +18,7 @@ import java.util.Arrays;
  * Dans ce dernier cas, le filtre crée la session de l'utilisateur, crée un objet User et l'ajoute en attribut de la session.
  * Laisse toutefois passer les URLs "/" et "/index.html".
  */
+/*
 @WebFilter(filterName = "Auth", urlPatterns = {"*"})
 public class Auth extends HttpFilter {
     private final String[] whiteList = {"/", "/index.html", "/css/style.css"};
@@ -55,5 +56,32 @@ public class Auth extends HttpFilter {
 
         // Bloque les autres requêtes
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Vous devez vous connecter pour accéder au site.");
+    }
+}
+*/
+
+@WebFilter(filterName = "Auth", urlPatterns = {"*"})
+public class Auth extends HttpFilter {
+    private final String[] whiteList = {"/", "/index.html", "/css/style.css"};
+
+    @Override
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // Permet de retrouver la fin de l'URL (après l'URL du contexte) ; indépendant de l'URL de déploiement
+        String url = request.getRequestURI().replace(request.getContextPath(), "");
+
+        // Laisse passer les URLs ne nécessitant pas d'authentification
+        if (Arrays.asList(whiteList).contains(url)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // Vérifie si l'utilisateur a une session valide
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            chain.doFilter(request, response);
+        } else {
+            // L'utilisateur n'est pas authentifié, renvoyer une réponse 401 (Unauthorized)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        }
     }
 }

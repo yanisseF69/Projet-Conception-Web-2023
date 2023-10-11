@@ -80,18 +80,36 @@ public class Connect extends HttpServlet {
         ServletContext context = getServletContext();
         Dao<User> users = (Dao<User>) context.getAttribute("users");
 
-        User user = new User(request.getParameter("login"), request.getParameter("name"));
-        try {
-            users.add(user);
-        } catch (NameAlreadyBoundException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
-            return;
+        String operation = request.getParameter("operation");
+
+        if ("login".equals(operation)) {
+            User user = new User(request.getParameter("login"), request.getParameter("name"));
+            try {
+                users.add(user);
+
+                HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
+            } catch (NameAlreadyBoundException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
+                return;
         }
         response.sendRedirect("interface.jsp");
-    }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Operation inconnue ou incorrecte.");
+        }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getRequestDispatcher("interface.jsp").forward(request, response);
-    }
+        String operation = request.getParameter("operation");
+
+        if ("logout".equals(operation)) {
+            HttpSession session = request.getSession(false);
+            if (session != null){
+                session.invalidate();
+            }
+            response.sendRedirect("index.html");
+        } else {
+            request.getRequestDispatcher("interface.jsp").forward(request, response);
+        }
+   }
 }
