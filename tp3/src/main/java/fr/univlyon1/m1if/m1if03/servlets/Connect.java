@@ -1,11 +1,8 @@
 package fr.univlyon1.m1if.m1if03.servlets;
 
-import fr.univlyon1.m1if.m1if03.classes.Todo;
 import fr.univlyon1.m1if.m1if03.classes.User;
 
 import fr.univlyon1.m1if.m1if03.daos.Dao;
-import fr.univlyon1.m1if.m1if03.daos.UserDao;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,9 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import javax.naming.NameAlreadyBoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-/**
+/*
  * Cette servlet initialise les objets communs à toute l'application,
  * récupère les infos de l'utilisateur pour les placer dans sa session
  * et affiche l'interface du chat.
@@ -72,6 +68,9 @@ public class Connect extends HttpServlet {
 }
 */
 
+/**
+ * Class Connect.
+ */
 @WebServlet(name = "Connect", urlPatterns = {"/connect"})
 public class Connect extends HttpServlet {
     @Override

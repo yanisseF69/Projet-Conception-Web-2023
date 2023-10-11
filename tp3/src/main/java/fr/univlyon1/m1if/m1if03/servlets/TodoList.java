@@ -2,9 +2,6 @@ package fr.univlyon1.m1if.m1if03.servlets;
 
 import fr.univlyon1.m1if.m1if03.classes.Todo;
 
-import fr.univlyon1.m1if.m1if03.classes.User;
-import fr.univlyon1.m1if.m1if03.daos.Dao;
-import fr.univlyon1.m1if.m1if03.daos.TodoDao;
 import fr.univlyon1.m1if.m1if03.exceptions.MissingParameterException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -14,8 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
+import java.util.ArrayList;
 
 /**
  * Cette servlet gère la liste des TODOs.
@@ -26,9 +22,6 @@ import java.util.Objects;
  */
 @WebServlet(name = "TodoList", value = "/todolist")
 public class TodoList extends HttpServlet {
-
-    private Dao<Todo> todos = new TodoDao();
-
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -43,7 +36,7 @@ public class TodoList extends HttpServlet {
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
-            todos = (Dao<Todo>) this.getServletContext().getAttribute("todos");
+            ArrayList<Todo> todos = (ArrayList<Todo>) this.getServletContext().getAttribute("todos");
             switch (request.getParameter("operation")) {
                 case "add" -> {
                     if (request.getParameter("title") == null || request.getParameter("login") == null) {
@@ -56,10 +49,10 @@ public class TodoList extends HttpServlet {
                 case "update" -> {
                     // Récupération de l'index
                     int index = Integer.parseInt(request.getParameter("index"));
-                    if (index < 0 || index >= todos.findAll().size()) {
+                    if (index < 0 || index >= todos.size()) {
                         throw new StringIndexOutOfBoundsException("Pas de todo avec l'index " + index + ".");
                     }
-                    Todo todo = todos.findOne(index);
+                    /*Todo todo = todos.findOne(index);
                     if (request.getParameter("toggle") != null && !request.getParameter("toggle").isEmpty()) {
                         todo.setCompleted(Objects.equals(request.getParameter("toggle"), "Done!"));
                     } else {
@@ -70,7 +63,7 @@ public class TodoList extends HttpServlet {
                         } else {
                             throw new MissingParameterException("Modification à réaliser non spécifiée.");
                         }
-                    }
+                    }*/
                 }
                 default -> throw new UnsupportedOperationException("Opération à réaliser non prise en charge.");
             }

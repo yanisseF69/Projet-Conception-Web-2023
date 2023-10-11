@@ -1,6 +1,5 @@
 package fr.univlyon1.m1if.m1if03.servlets;
 
-import fr.univlyon1.m1if.m1if03.classes.Todo;
 import fr.univlyon1.m1if.m1if03.classes.User;
 
 import fr.univlyon1.m1if.m1if03.daos.Dao;
@@ -8,14 +7,8 @@ import fr.univlyon1.m1if.m1if03.daos.UserDao;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import javax.naming.NameAlreadyBoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Init extends HttpServlet {
     @Override
