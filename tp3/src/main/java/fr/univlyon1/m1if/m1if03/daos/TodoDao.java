@@ -24,9 +24,4 @@ public class TodoDao extends AbstractListDao<Todo> {
         }
         return res;
     }
-
-
-
-
-
 }
