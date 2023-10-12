@@ -13,4 +13,9 @@
             <url-pattern>/userlist*</url-pattern>
         </filter-mapping>
 
+        <filter-mapping>
+            <filter-name>Cache</filter-name>
+            <url-pattern>/todolist*</url-pattern>
+        </filter-mapping>
+
 </web-app>
