@@ -9,21 +9,21 @@
 </head>
 <body>
 <c:set var="user" value="${applicationScope.users.findOne(param.user)}" scope="request"/>
-<h2>Utilisateur ${user.login}</h2>
+<h2>Utilisateur ${user.getLogin()}</h2>
 <div>
-    Login : ${user.login}<br>
+    Login : ${user.getLogin()}<br>
     <form method="post" action="userlist.jsp" target="_parent">
         <label for="name">Prénom : <input type="text" name="name" id="name" value="${user.name}"></label>&nbsp;
         <input type="submit" value="Modification">
-        <input type="hidden" name="login" value="${user.login}">
+        <input type="hidden" name="login" value="${user.getLogin()}">
     </form>
-    <c:if test="${sessionScope.login.equals(user.login)}">
+    <c:if test="${sessionScope.login.equals(user.getLogin())}">
     <br>
     Todos:
     <ul>
-        <c:forEach items="${applicationScope.todos}" var="todo">
-            <c:if test="${todo.assignee != null && todo.assignee.equals(user)}">
-                <li><a href="todolist#${todo.hashCode()}">${todo.title}</a></li>
+        <c:forEach items="${applicationScope.todos.findAll()}" var="todo">
+            <c:if test="${todo.getAssignee() != null && todo.getAssignee().equals(user.getLogin())}">
+                <li><a href="todolist#${todo.hashCode()}">${todo.getTitle()}</a></li>
             </c:if>
         </c:forEach>
     </ul>

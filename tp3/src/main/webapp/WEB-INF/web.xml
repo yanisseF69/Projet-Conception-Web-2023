@@ -8,9 +8,9 @@
             <url-pattern>*</url-pattern>
         </filter-mapping>
 
-      <!-- <filter-mapping>
+        <filter-mapping>
             <filter-name>ModifyUserFilter</filter-name>
             <url-pattern>/userlist*</url-pattern>
-        </filter-mapping> -->
+        </filter-mapping>
 
 </web-app>
