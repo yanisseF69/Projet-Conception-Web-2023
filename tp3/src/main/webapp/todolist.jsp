@@ -17,23 +17,29 @@
         <th>Utilisateur assigné</th>
     </tr>
     <c:forEach var="todo" items="${applicationScope.todos.findAll()}">
-    <form method="POST" action="todolist">
-        <tr id="${todo.hashCode()}">
-            <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
-            <td><em>${todo.title}</em></td>
-            <td>
-                <c:if test="${todo.assignee != null}"><a href="user.jsp?user=${todo.assignee.login}">${todo.assignee.login}</a></c:if>
-                <c:if test="${!todo.completed && todo.assignee.login != sessionScope.login}">
-                    <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
-                </c:if>
-            </td>
-            <td>
-                <input type='submit' name='toggle' value='${todo.completed ? "Not done!" : "Done!"}'>
-            </td>
-        </tr>
-        <input type='hidden' name='operation' value='update'>
-        <input type='hidden' name='index' value='${applicationScope.todos.getId(todo)}'>
-    </form>
+    <c:forEach var="user" items="${applicationScope.users.findAll()}">
+        <form method="POST" action="todolist">
+            <tr id="${todo.hashCode()}">
+                <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
+                <td><em>${todo.title}</em></td>
+                <td>
+                    <c:if test="${todo.getAssignee() != null}">
+                        <c:if test="${todo.getAssignee() == user.getLogin()}">
+                            <a href="user.jsp?user=${user.getLogin()}">${user.getLogin()}</a>
+                        </c:if>
+                    </c:if>
+                    <c:if test="${!todo.completed && todo.getAssignee() != user.getLogin()}">
+                        <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
+                    </c:if>
+                </td>
+                <td>
+                    <input type='submit' name='toggle' value='${todo.completed ? "Not done!" : "Done!"}'>
+                </td>
+            </tr>
+            <input type='hidden' name='operation' value='update'>
+            <input type='hidden' name='index' value='${applicationScope.todos.getId(todo)}'>
+        </form>
+    </c:forEach>
     </c:forEach>
 </table>
 <script>

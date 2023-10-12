@@ -60,8 +60,9 @@ public class TodoList extends HttpServlet {
                     } else {
                         if (request.getParameter("assign") != null && !request.getParameter("assign").isEmpty()) {
                             String login = (String) request.getSession().getAttribute("login");
-                            User user = ((Dao<User>) this.getServletContext().getAttribute("users")).findOne(login);
-                            todo.setAssignee(user);
+                            Dao<User> users = ((Dao<User>) this.getServletContext().getAttribute("users"));
+                            String userId = (String) users.getId(users.findOne(login));
+                            todo.setAssignee(userId);
                         } else {
                             throw new MissingParameterException("Modification à réaliser non spécifiée.");
                         }
