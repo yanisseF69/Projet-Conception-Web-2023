@@ -11,9 +11,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe Cache.
+ */
 @WebFilter(filterName = "Cache", urlPatterns = {"/todolist"})
 public class Cache extends HttpFilter {
-    Map<String, Date> todoLastModifiedMap = new HashMap<>();
+    private Map<String, Date> todoLastModifiedMap = new HashMap<>();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

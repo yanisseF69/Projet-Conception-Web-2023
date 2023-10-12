@@ -2,6 +2,7 @@
 <%@ page import="fr.univlyon1.m1if.m1if03.daos.Dao" %>
 <%@ page import="javax.naming.InvalidNameException" %>
 <%@ page import="javax.naming.NameNotFoundException" %>
+<%@ page import="fr.univlyon1.m1if.m1if03.daos.UserDao" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
@@ -9,9 +10,9 @@
         try {
             /*if(!request.getParameter("login").equals(request.getSession(false).getAttribute("login")))
                 throw new IllegalAccessException("Vous n'avez pas le droit de modifier l'utilisateur " + request.getParameter("login"));*/
-            User user = ((Dao<User>) config.getServletContext().getAttribute("users")).findOne(request.getParameter("login"));
+            User user = ((UserDao) config.getServletContext().getAttribute("users")).findOne(request.getParameter("login"));
             user.setName(request.getParameter("name"));
-        } catch (NullPointerException | InvalidNameException | NameNotFoundException e) {
+        } catch (NullPointerException | NameNotFoundException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Login de l'utilisateur vide ou inexistant: " + request.getParameter("login") + ".");
             return;
         }

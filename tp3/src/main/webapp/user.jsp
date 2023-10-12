@@ -12,12 +12,13 @@
 <h2>Utilisateur ${user.getLogin()}</h2>
 <div>
     Login : ${user.getLogin()}<br>
-    <form method="post" action="userlist.jsp" target="_parent">
-        <label for="name">Prénom : <input type="text" name="name" id="name" value="${user.name}"></label>&nbsp;
-        <input type="submit" value="Modification">
-        <input type="hidden" name="login" value="${user.getLogin()}">
-    </form>
     <c:if test="${sessionScope.login.equals(user.getLogin())}">
+        <form method="post" action="user" target="_parent">
+            <label for="name">Prénom : <input type="text" name="name" id="name" value="${user.name}"></label>&nbsp;
+            <input type="submit" value="Modification">
+            <input type="hidden" name="operation" value="modif">
+        </form>
+    </c:if>
     <br>
     Todos:
     <ul>
@@ -28,6 +29,5 @@
         </c:forEach>
     </ul>
 </div>
-</c:if>
 </body>
 </html>

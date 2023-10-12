@@ -16,31 +16,28 @@
         <th>Titre</th>
         <th>Utilisateur assigné</th>
     </tr>
+    <jsp:useBean id="users" scope="application" type="fr.univlyon1.m1if.m1if03.daos.UserDao"/>
     <c:forEach var="todo" items="${applicationScope.todos.findAll()}">
-    <c:forEach var="user" items="${applicationScope.users.findAll()}">
-        <form method="POST" action="todolist">
-            <tr id="${todo.hashCode()}">
-                <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
-                <td><em>${todo.title}</em></td>
-                <td>
-                    <c:if test="${todo.getAssignee() != null}">
-                        <c:if test="${todo.getAssignee() == user.getLogin()}">
-                            <a href="user.jsp?user=${user.getLogin()}">${user.getLogin()}</a>
+            <form method="POST" action="todolist">
+                <tr id="${todo.hashCode()}">
+                    <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
+                    <td><em>${todo.title}</em></td>
+                    <td>
+                        <c:if test="${todo.getAssignee() != null}">
+                            <a href="user.jsp?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
                         </c:if>
-                    </c:if>
-                    <c:if test="${!todo.completed && todo.getAssignee() != user.getLogin()}">
-                        <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
-                    </c:if>
-                </td>
-                <td>
-                    <input type='submit' name='toggle' value='${todo.completed ? "Not done!" : "Done!"}'>
-                </td>
-            </tr>
-            <input type='hidden' name='operation' value='update'>
-            <input type='hidden' name='index' value='${applicationScope.todos.getId(todo)}'>
-        </form>
-    </c:forEach>
-    </c:forEach>
+                        <c:if test="${!todo.completed && todo.getAssignee() != sessionScope.user.getLogin()}">
+                            <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
+                        </c:if>
+                    </td>
+                    <td>
+                        <input type='submit' name='toggle' value='${todo.completed ? "Not done!" : "Done!"}'>
+                    </td>
+                </tr>
+                <input type='hidden' name='operation' value='update'>
+                <input type='hidden' name='index' value='${applicationScope.todos.getId(todo)}'>
+            </form>
+        </c:forEach>
 </table>
 <script>
     if(location.hash) {
