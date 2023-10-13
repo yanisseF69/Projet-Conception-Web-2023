@@ -19,6 +19,7 @@ import java.io.IOException;
 public class ModifyUserFilter extends HttpFilter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
     }
 
     @Override

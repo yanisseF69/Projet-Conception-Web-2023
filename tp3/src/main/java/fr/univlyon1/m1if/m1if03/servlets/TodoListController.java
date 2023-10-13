@@ -24,8 +24,8 @@ import java.util.Objects;
  *
  * @author Lionel Médini
  */
-@WebServlet(name = "TodoList", value = "/todolist")
-public class TodoList extends HttpServlet {
+@WebServlet(name = "TodoListController", value = "/todolist")
+public class TodoListController extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -41,8 +41,7 @@ public class TodoList extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher("todolist.jsp").include(request, response);
-
+        request.getRequestDispatcher("/WEB-INF/components/todolist.jsp").include(request, response);
     }
 
     @Override
