@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * Classe qui nous servira de controlleur de l'entité User.
  */
-@WebServlet(name = "UserController", value = {"/user", "/connect"})
+@WebServlet(name = "UserController", value = {"/user", "/connect", "/userDetails", "/userProfile"})
 public class UserController extends HttpServlet {
 
     @Override
@@ -35,7 +35,7 @@ public class UserController extends HttpServlet {
         UserDao users = (UserDao) context.getAttribute("users");
         String operation = request.getParameter("operation");
 
-        if("logout".equals(operation)) {
+        if ("logout".equals(operation)) {
             session = request.getSession(false);
             String login = (String) session.getAttribute("login");
             session.invalidate();
@@ -45,7 +45,15 @@ public class UserController extends HttpServlet {
                 throw new RuntimeException(e);
             }
             request.getRequestDispatcher("/index.html").forward(request, response);
+        } else if("details".equals(operation)) {
+            request.getRequestDispatcher("/userlist.jsp").forward(request, response);
+        } else if(request.getParameter("user") != null) {
+            request.getRequestDispatcher("/user.jsp").forward(request, response);
+            // On redirige la totalité de l'interface pour afficher le nouveau nom dans l'interface
         }
+
+
+
         request.getRequestDispatcher("/user.jsp").forward(request, response);
     }
 

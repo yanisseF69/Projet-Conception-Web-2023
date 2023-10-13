@@ -24,7 +24,7 @@
                     <td><em>${todo.title}</em></td>
                     <td>
                         <c:if test="${todo.getAssignee() != null}">
-                            <a href="user.jsp?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
+                            <a href="userDetails?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
                         </c:if>
                         <c:if test="${!todo.completed && todo.getAssignee() != sessionScope.user.getLogin()}">
                             <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;

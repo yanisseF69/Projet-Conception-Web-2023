@@ -9,20 +9,20 @@
 <body>
 <header>
     <h1 class="header-titre">MIF TODOs</h1>
-    <p class="header-user">Bonjour <strong><a href="user.jsp?user=${sessionScope.login}" target="list">${applicationScope.users.findOne(sessionScope.login).name}</a></strong></p>
+    <p class="header-user">Bonjour <strong><a href="userDetails?user=${sessionScope.login}" target="list">${applicationScope.users.findOne(sessionScope.login).name}</a></strong></p>
 </header>
 
 <div class="wrapper">
     <aside class="menu">
         <h2>Menu</h2>
         <div>
-            <a href="userlist.jsp" target="list">Utilisateurs</a>
+            <a href="user?operation=details" target="list">Utilisateurs</a>
         </div>
         <div>
             <a href="todolist" target="list">Tâches</a>
         </div>
         <div>
-            <a href="connect?operation=logout">D&eacute;connexion</a>
+            <a href="user?operation=logout">D&eacute;connexion</a>
         </div>
     </aside>
 
