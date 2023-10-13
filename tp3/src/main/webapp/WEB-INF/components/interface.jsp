@@ -12,7 +12,7 @@
 <jsp:useBean id="login" scope="session" type="java.lang.String"/>
     <header>
         <h1 class="header-titre">MIF TODOs</h1>
-        <p class="header-user">Bonjour <strong><a href="userDetails?user=${user.login}" target="list">${users.findOne(login).name}</a></strong></p>
+        <p class="header-user">Bonjour <strong><a href="user?user=${user.login}" target="list">${users.findOne(login).name}</a></strong></p>
     </header>
 
     <div class="wrapper">

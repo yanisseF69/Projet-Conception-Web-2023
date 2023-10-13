@@ -13,9 +13,22 @@
             <url-pattern>/userlist*</url-pattern>
         </filter-mapping>
 
+        <filter>
+            <filter-name>Cache</filter-name>
+            <filter-class>fr.univlyon1.m1if.m1if03.filters.Cache</filter-class>
+        </filter>
         <filter-mapping>
             <filter-name>Cache</filter-name>
-            <url-pattern>/todolist*</url-pattern>
+            <url-pattern>*</url-pattern>
         </filter-mapping>
+        <filter>
+            <filter-name>EntityTagFilter</filter-name>
+            <filter-class>fr.univlyon1.m1if.m1if03.filters.ETagFilter</filter-class>
+        </filter>
+        <filter-mapping>
+            <filter-name>EntityTagFilter</filter-name>
+            <url-pattern>*</url-pattern>
+        </filter-mapping>
+
 
 </web-app>

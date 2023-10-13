@@ -24,7 +24,7 @@ import java.util.Objects;
  *
  * @author Lionel Médini
  */
-@WebServlet(name = "TodoListController", value = "/todolist")
+@WebServlet(name = "TodoListController", urlPatterns = "/todolist")
 public class TodoListController extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {

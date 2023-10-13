@@ -13,14 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import javax.naming.InvalidNameException;
-import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
 
 /**
  * Classe qui nous servira de controlleur de l'entité User.
  */
-@WebServlet(name = "UserController", value = {"/user", "/connect", "/userDetails", "/userProfile"})
+@WebServlet(name = "UserController", urlPatterns = {"/user"})
 public class UserController extends HttpServlet {
 
     @Override
@@ -48,15 +47,16 @@ public class UserController extends HttpServlet {
             } catch (NameNotFoundException | InvalidNameException e) {
                 throw new RuntimeException(e);
             }
-            request.getRequestDispatcher("/index.html").forward(request, response);
+            request.getRequestDispatcher("index.html").forward(request, response);
         } else if("details".equals(operation)) {
-            request.getRequestDispatcher("/WEB-INF/components/userlist.jsp").forward(request, response);
+            request.setAttribute("users", users);
+            request.getRequestDispatcher("/WEB-INF/components/userlist.jsp").include(request, response);
+            return;
         } else if(request.getParameter("user") != null) {
             request.getRequestDispatcher("/WEB-INF/components/user.jsp").forward(request, response);
+            return;
             // On redirige la totalité de l'interface pour afficher le nouveau nom dans l'interface
         }
-
-
 
         request.getRequestDispatcher("/WEB-INF/components/user.jsp").forward(request, response);
     }
@@ -75,18 +75,6 @@ public class UserController extends HttpServlet {
             session = request.getSession();
             User user = (User) session.getAttribute("user");
             user.setName(request.getParameter("name"));
-        } else if ("login".equals(operation)) {
-            User user = new User(request.getParameter("login"), request.getParameter("name"));
-            try {
-                users.add(user);
-                session = request.getSession(true);
-                session.setAttribute("user", user);
-            } catch (NameAlreadyBoundException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
-                return;
-            }
-            request.getRequestDispatcher("/WEB-INF/components/interface.jsp").forward(request, response);
-            return;
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Operation inconnue ou incorrecte.");
         }

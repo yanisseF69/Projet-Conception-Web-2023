@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>TODOs</title>
     <link rel="stylesheet" href="css/style.css">
-    <meta http-equiv="refresh" content="5">
+   <!-- <meta http-equiv="refresh" content="5"> -->
 </head>
 <body>
 <h2>Liste des TODOs</h2>
@@ -25,7 +25,7 @@
                     <td><em>${todo.title}</em></td>
                     <td>
                         <c:if test="${todo.getAssignee() != null}">
-                            <a href="userDetails?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
+                            <a href="user?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
                         </c:if>
                         <jsp:useBean id="user" scope="session" type="fr.univlyon1.m1if.m1if03.classes.User"/>
                         <c:if test="${!todo.completed && todo.getAssignee() != user.getLogin()}">
