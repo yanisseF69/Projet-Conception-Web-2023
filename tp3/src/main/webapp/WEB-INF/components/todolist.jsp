@@ -17,7 +17,8 @@
         <th>Utilisateur assigné</th>
     </tr>
     <jsp:useBean id="users" scope="application" type="fr.univlyon1.m1if.m1if03.daos.UserDao"/>
-    <c:forEach var="todo" items="${applicationScope.todos.findAll()}">
+    <jsp:useBean id="todos" scope="application" type="fr.univlyon1.m1if.m1if03.daos.TodoDao"/>
+    <c:forEach var="todo" items="${todos.findAll()}">
             <form method="POST" action="todolist">
                 <tr id="${todo.hashCode()}">
                     <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
@@ -26,7 +27,8 @@
                         <c:if test="${todo.getAssignee() != null}">
                             <a href="userDetails?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
                         </c:if>
-                        <c:if test="${!todo.completed && todo.getAssignee() != sessionScope.user.getLogin()}">
+                        <jsp:useBean id="user" scope="session" type="fr.univlyon1.m1if.m1if03.classes.User"/>
+                        <c:if test="${!todo.completed && todo.getAssignee() != user.getLogin()}">
                             <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
                         </c:if>
                     </td>
@@ -35,7 +37,7 @@
                     </td>
                 </tr>
                 <input type='hidden' name='operation' value='update'>
-                <input type='hidden' name='index' value='${applicationScope.todos.getId(todo)}'>
+                <input type='hidden' name='index' value='${todos.getId(todo)}'>
             </form>
         </c:forEach>
 </table>

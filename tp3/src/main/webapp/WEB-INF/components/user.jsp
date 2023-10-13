@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<c:set var="user" value="${applicationScope.users.findOne(param.user)}" scope="request"/>
+<jsp:useBean id="users" scope="application" type="fr.univlyon1.m1if.m1if03.daos.UserDao"/>
+<c:set var="user" value="${users.findOne(param.user)}" scope="request"/>
 <h2>Utilisateur ${user.getLogin()}</h2>
 <div>
     Login : ${user.getLogin()}<br>
-    <c:if test="${sessionScope.login.equals(user.getLogin())}">
+    <jsp:useBean id="login" beanName="login" scope="session" type="java.lang.String"/>
+    <c:if test="${login.equals(user.getLogin())}">
         <form method="post" action="user" target="_parent">
             <label for="name">Prénom : <input type="text" name="name" id="name" value="${user.name}"></label>&nbsp;
             <input type="submit" value="Modification">
@@ -22,7 +24,8 @@
     <br>
     Todos:
     <ul>
-        <c:forEach items="${applicationScope.todos.findAll()}" var="todo">
+        <jsp:useBean id="todos" scope="application" type="fr.univlyon1.m1if.m1if03.daos.TodoDao"/>
+        <c:forEach items="${todos.findAll()}" var="todo">
             <c:if test="${todo.getAssignee() != null && todo.getAssignee().equals(user.getLogin())}">
                 <li><a href="todolist#${todo.hashCode()}">${todo.getTitle()}</a></li>
             </c:if>
