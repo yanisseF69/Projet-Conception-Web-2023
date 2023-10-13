@@ -5,12 +5,14 @@ import fr.univlyon1.m1if.m1if03.classes.Todo;
 import fr.univlyon1.m1if.m1if03.classes.User;
 import fr.univlyon1.m1if.m1if03.daos.Dao;
 import fr.univlyon1.m1if.m1if03.exceptions.MissingParameterException;
+//import fr.univlyon1.m1if.m1if03.filters.Cache;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 
 import java.io.IOException;
 import java.util.Objects;
@@ -31,7 +33,16 @@ public class TodoList extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        String todoId = request.getParameter("todoId");
+
+        if (request.getHeader("If-Modified-Since") != null) {
+            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+            return;
+        }
+
         request.getRequestDispatcher("todolist.jsp").include(request, response);
+
     }
 
     @Override
