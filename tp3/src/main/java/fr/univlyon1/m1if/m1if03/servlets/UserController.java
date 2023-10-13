@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if03.servlets;
 
 import fr.univlyon1.m1if.m1if03.classes.User;
+import fr.univlyon1.m1if.m1if03.daos.TodoDao;
 import fr.univlyon1.m1if.m1if03.daos.UserDao;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.naming.InvalidNameException;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
@@ -40,21 +42,23 @@ public class UserController extends HttpServlet {
             String login = (String) session.getAttribute("login");
             session.invalidate();
             try {
+                TodoDao todos = (TodoDao) context.getAttribute("todos");
+                todos.unassign(login);
                 users.deleteById(login);
-            } catch (NameNotFoundException e) {
+            } catch (NameNotFoundException | InvalidNameException e) {
                 throw new RuntimeException(e);
             }
             request.getRequestDispatcher("/index.html").forward(request, response);
         } else if("details".equals(operation)) {
-            request.getRequestDispatcher("/userlist.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/components/userlist.jsp").forward(request, response);
         } else if(request.getParameter("user") != null) {
-            request.getRequestDispatcher("/user.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/components/user.jsp").forward(request, response);
             // On redirige la totalité de l'interface pour afficher le nouveau nom dans l'interface
         }
 
 
 
-        request.getRequestDispatcher("/user.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/components/user.jsp").forward(request, response);
     }
 
 
@@ -81,12 +85,12 @@ public class UserController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
                 return;
             }
-            request.getRequestDispatcher("/interface.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/components/interface.jsp").forward(request, response);
             return;
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Operation inconnue ou incorrecte.");
         }
 
-        request.getRequestDispatcher("/interface.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/components/interface.jsp").forward(request, response);
     }
 }

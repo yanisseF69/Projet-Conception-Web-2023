@@ -31,7 +31,7 @@ public class TodoListController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getRequestDispatcher("todolist.jsp").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/components/todolist.jsp").include(request, response);
     }
 
     @Override
