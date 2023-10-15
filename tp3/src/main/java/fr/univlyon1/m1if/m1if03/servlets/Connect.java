@@ -1,29 +1,21 @@
 package fr.univlyon1.m1if.m1if03.servlets;
 
-import fr.univlyon1.m1if.m1if03.classes.Todo;
 import fr.univlyon1.m1if.m1if03.classes.User;
 
-import fr.univlyon1.m1if.m1if03.daos.Dao;
 import fr.univlyon1.m1if.m1if03.daos.UserDao;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-/**
- * Cette servlet initialise les objets communs à toute l'application,
- * récupère les infos de l'utilisateur pour les placer dans sa session
- * et affiche l'interface du chat.
- *
- * @author Lionel Médini
- */
+
 
 /*
 @WebServlet(name = "Connect", urlPatterns = {"/connect"})
@@ -72,26 +64,64 @@ public class Connect extends HttpServlet {
 }
 */
 
-@WebServlet(name = "Connect", urlPatterns = {"/connect"})
+/**
+ * Cette servlet initialise les objets communs à toute l'application,
+ * récupère les infos de l'utilisateur pour les placer dans sa session
+ * et affiche l'interface du chat.
+ *
+ * @author Lionel Médini
+ */
+@WebServlet(name = "Connect", urlPatterns = {"/todos"})
 public class Connect extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Récupère le DAO d'utilisateurs à partir du contexte
         ServletContext context = getServletContext();
-        Dao<User> users = (Dao<User>) context.getAttribute("users");
+        UserDao users = (UserDao) context.getAttribute("users");
 
-        User user = new User(request.getParameter("login"), request.getParameter("name"));
-        try {
-            users.add(user);
-        } catch (NameAlreadyBoundException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
-            return;
+        String operation = request.getParameter("operation");
+
+        if ("login".equals(operation)) {
+            User user = new User(request.getParameter("login"), request.getParameter("name"));
+            try {
+                users.add(user);
+
+                HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
+                session.setAttribute("login", user.getLogin());
+                request.setAttribute("user", user);
+                request.setAttribute("userName", user.getName());
+                request.setAttribute("login", user.getLogin());
+
+            } catch (NameAlreadyBoundException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
+                return;
+            }
+            request.getRequestDispatcher("/WEB-INF/components/interface.jsp").include(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Operation inconnue ou incorrecte.");
         }
-        response.sendRedirect("interface.jsp");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getRequestDispatcher("interface.jsp").forward(request, response);
+        String operation = request.getParameter("operation");
+
+        if ("logout".equals(operation)) {
+            HttpSession session = request.getSession(false);
+
+            String login = (String) session.getAttribute("login");
+            session.invalidate();
+            try {
+                ((UserDao) this.getServletContext().getAttribute("users")).deleteById(login);
+            } catch (NameNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            response.sendRedirect("index.html");
+
+        } else {
+            request.getRequestDispatcher("/WEB-INF/components/interface.jsp").forward(request, response);
+        }
     }
 }
+

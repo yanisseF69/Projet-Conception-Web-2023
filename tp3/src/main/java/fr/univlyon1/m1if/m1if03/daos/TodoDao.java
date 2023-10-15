@@ -2,57 +2,25 @@ package fr.univlyon1.m1if.m1if03.daos;
 
 import fr.univlyon1.m1if.m1if03.classes.Todo;
 
-import javax.naming.NameAlreadyBoundException;
+import javax.naming.InvalidNameException;
+import javax.naming.NameNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Classe TodoDao.
- * */
-public class TodoDao extends AbstractMapDao<Todo> {
+ */
+public class TodoDao extends AbstractListDao<Todo> {
 
-    protected Serializable getKeyForElement(Todo element) {
-        return element.getTitle();
-    }
-
-    public void createTodo(String title, String creator) throws NameAlreadyBoundException {
-        Todo todo = new Todo(title, creator);
-        this.add(todo);
-    }
-
-    public List<String> getIdTodosByOwner(String login) {
-        List<Todo> todos = new ArrayList<Todo>(this.findAll());
-        List<String> idTodos = new ArrayList<String>();
-        todos.forEach(todo -> {
-            if(todo.getAssignee().getLogin() == login) {
-                idTodos.add(todo.getAssignee().getLogin());
-            }
+    public List<Todo> findById(Serializable id) {
+        List<Todo> res = new ArrayList<>();
+        this.collection.forEach(todo -> {
+            if(todo.getAssignee() == id) res.add(todo);
         });
-        return idTodos;
+        return res;
     }
-
-    public List<Todo> getTodosByOwner(String login) {
-        List<Todo> todos = new ArrayList<Todo>(this.findAll());
-        List<Todo> todosOwner = new ArrayList<Todo>();
-        todos.forEach(todo -> {
-            if(todo.getAssignee().getLogin() == login) {
-                todosOwner.add(todo);
-            }
-        });
-        return todosOwner;
+    public void unassign(Serializable id) throws InvalidNameException, NameNotFoundException {
+        findById(id).forEach(todo -> todo.setAssignee(null));
     }
-
-    public Todo getByTitle(String title) {
-        List<Todo> todos = new ArrayList<>(this.findAll());
-        for(int i = 0; i < todos.size(); i++) {
-            if(todos.get(i).getTitle().equals(title)) {
-
-            }
-        }
-    }
-
-
-
-
 }

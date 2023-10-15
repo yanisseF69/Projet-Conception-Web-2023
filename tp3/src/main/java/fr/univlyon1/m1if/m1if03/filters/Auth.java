@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 
+
 /**
  * Filtre d'authentification.
  * N'autorise l'accès qu'aux clients ayant déjà une session existante ou ayant rempli le formulaire de la page <code>index.html</code>.
@@ -43,7 +44,7 @@ public class Auth extends HttpFilter {
 
         // Traite les formulaires d'authentification
         String login = request.getParameter("login");
-        if (url.equals("/connect") &&
+        if (url.equals("/todos") &&
                 request.getMethod().equals("POST") &&
                 login != null && !login.isEmpty()) {
             // Gestion de la session utilisateur
@@ -57,3 +58,33 @@ public class Auth extends HttpFilter {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Vous devez vous connecter pour accéder au site.");
     }
 }
+
+
+
+/*
+@WebFilter(filterName = "Auth", urlPatterns = {"*"})
+public class Auth extends HttpFilter {
+    private final String[] whiteList = {"/", "/index.html", "/css/style.css"};
+
+    @Override
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // Permet de retrouver la fin de l'URL (après l'URL du contexte) ; indépendant de l'URL de déploiement
+        String url = request.getRequestURI().replace(request.getContextPath(), "");
+
+        // Laisse passer les URLs ne nécessitant pas d'authentification
+        if (Arrays.asList(whiteList).contains(url)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // Vérifie si l'utilisateur a une session valide
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            chain.doFilter(request, response);
+        } else {
+            // L'utilisateur n'est pas authentifié, renvoyer une réponse 401 (Unauthorized)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        }
+    }
+}
+*/
