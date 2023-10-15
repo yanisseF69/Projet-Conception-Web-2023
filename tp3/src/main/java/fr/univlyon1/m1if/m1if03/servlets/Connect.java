@@ -71,7 +71,7 @@ public class Connect extends HttpServlet {
  *
  * @author Lionel Médini
  */
-@WebServlet(name = "Connect", urlPatterns = {"/connect"})
+@WebServlet(name = "Connect", urlPatterns = {"/todos"})
 public class Connect extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,6 +88,11 @@ public class Connect extends HttpServlet {
 
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);
+                session.setAttribute("login", user.getLogin());
+                request.setAttribute("user", user);
+                request.setAttribute("userName", user.getName());
+                request.setAttribute("login", user.getLogin());
+
             } catch (NameAlreadyBoundException e) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Un utilisateur avec le login " + user.getLogin() + " existe déjà.");
                 return;

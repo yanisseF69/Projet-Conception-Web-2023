@@ -7,25 +7,25 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<jsp:useBean id="user" scope="session" type="fr.univlyon1.m1if.m1if03.classes.User"/>
-<jsp:useBean id="users" scope="application" type="fr.univlyon1.m1if.m1if03.daos.UserDao"/>
-<jsp:useBean id="login" scope="session" type="java.lang.String"/>
+<jsp:useBean id="user" scope="request" type="fr.univlyon1.m1if.m1if03.classes.User"/>
+<jsp:useBean id="userName" scope="request" type="java.lang.String"/>
+<jsp:useBean id="login" scope="request" type="java.lang.String"/>
     <header>
         <h1 class="header-titre">MIF TODOs</h1>
-        <p class="header-user">Bonjour <strong><a href="user?user=${user.login}" target="list">${users.findOne(login).name}</a></strong></p>
+        <p class="header-user">Bonjour <strong><a href="user?user=${login}" target="list">${userName}</a></strong></p>
     </header>
 
     <div class="wrapper">
         <aside class="menu">
             <h2>Menu</h2>
             <div>
-                <a href="user?operation=details" target="list">Utilisateurs</a>
+                <a href="users" target="list">Utilisateurs</a>
             </div>
             <div>
                 <a href="todolist" target="list">Tâches</a>
             </div>
             <div>
-                <a href="connect?operation=logout">D&eacute;connexion</a>
+                <a href="todos?operation=logout">D&eacute;connexion</a>
             </div>
         </aside>
 
@@ -40,7 +40,7 @@
                     </label>
                     <input type="submit" value="Envoyer">
                     <input type="hidden" name="operation" value="add">
-                    <input type="hidden" name="login" value="${user.login}">
+                    <input type="hidden" name="login" value="${login}">
                 </p>
             </form>
         </article>

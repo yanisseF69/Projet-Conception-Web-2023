@@ -27,22 +27,32 @@ public class Cache extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String todoId = request.getParameter("todoId");
 
-        if (todoLastModifiedMap.containsKey(todoId)) {
-            Date lastModified = todoLastModifiedMap.get(todoId);
-            long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+        Date date = new Date(System.currentTimeMillis());
 
-            if (ifModifiedSince != -1 && lastModified.getTime() <= ifModifiedSince) {
-                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                return;
+        if (request.getMethod().equals("GET")) {
+            if (todoLastModifiedMap.get(todoId) != null) { //si ok
+                long lastModified = request.getDateHeader("If-Modified-Since");
+                Date dateLastModified = new Date(lastModified * 500);
+                Date dateLastModifiedMap = todoLastModifiedMap.get(todoId);
+
+
+                if (dateLastModifiedMap.before(dateLastModified)) { //Si rien modifié
+                    //304 et retourner une page vide.
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    return;
+                }
+
+                response.setDateHeader("Last-Modified", date.getTime());
+
             }
+            chain.doFilter(request, response);
         }
 
-        chain.doFilter(request, response);
-
-        if (todoId != null) {
-            todoLastModifiedMap.put(todoId, new Date());
-            response.setDateHeader("Last-Modified", System.currentTimeMillis());
+        if (request.getMethod().equals("POST")) {
+            todoLastModifiedMap.put(todoId, date);
+            chain.doFilter(request, response);
         }
+
     }
 
 }

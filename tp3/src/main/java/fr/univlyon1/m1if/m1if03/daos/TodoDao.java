@@ -14,7 +14,7 @@ import java.util.List;
 public class TodoDao extends AbstractListDao<Todo> {
 
     public List<Todo> findById(Serializable id) {
-        List<Todo> res = new ArrayList<Todo>();
+        List<Todo> res = new ArrayList<>();
         this.collection.forEach(todo -> {
             if(todo.getAssignee() == id) res.add(todo);
         });
