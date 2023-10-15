@@ -4,9 +4,12 @@ import fr.univlyon1.m1if.m1if03.classes.Todo;
 
 import fr.univlyon1.m1if.m1if03.classes.User;
 import fr.univlyon1.m1if.m1if03.daos.Dao;
+import fr.univlyon1.m1if.m1if03.daos.TodoDao;
+import fr.univlyon1.m1if.m1if03.daos.UserDao;
 import fr.univlyon1.m1if.m1if03.exceptions.MissingParameterException;
 //import fr.univlyon1.m1if.m1if03.filters.Cache;
 import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,13 +37,15 @@ public class TodoListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String todoId = request.getParameter("todoId");
 
         if (request.getHeader("If-Modified-Since") != null) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
 
+        ServletContext context = getServletContext();
+        request.setAttribute("todos", ((TodoDao) context.getAttribute("todos")).findAll());
+        request.setAttribute("users", ((UserDao) context.getAttribute("users")).findAll());
         request.getRequestDispatcher("/WEB-INF/components/todolist.jsp").include(request, response);
     }
 

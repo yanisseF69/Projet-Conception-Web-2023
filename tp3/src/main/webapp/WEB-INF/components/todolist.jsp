@@ -16,19 +16,20 @@
         <th>Titre</th>
         <th>Utilisateur assigné</th>
     </tr>
-    <jsp:useBean id="users" scope="application" type="fr.univlyon1.m1if.m1if03.daos.UserDao"/>
-    <jsp:useBean id="todos" scope="application" type="fr.univlyon1.m1if.m1if03.daos.TodoDao"/>
-    <c:forEach var="todo" items="${todos.findAll()}">
+    <jsp:useBean id="users" scope="request" type="java.util.Collection<fr.univlyon1.m1if.m1if03.classes.User>"/>
+    <jsp:useBean id="todos" scope="request" type="java.util.Collection<fr.univlyon1.m1if.m1if03.classes.Todo>"/>
+    <c:forEach var="todo" items="${todos}" varStatus="loop">
             <form method="POST" action="todolist">
                 <tr id="${todo.hashCode()}">
                     <td>${todo.completed ? "&#x2611;" : "&#x2610;"}</td>
                     <td><em>${todo.title}</em></td>
                     <td>
-                        <c:if test="${todo.getAssignee() != null}">
-                            <a href="user?user=${users.findOne(todo.getAssignee()).login}">${users.findOne(todo.getAssignee()).login}</a>
+                        <c:if test="${todo.assignee != null}">
+
+                            <a href="user?user=${todo.assignee}">${todo.assignee}</a>
                         </c:if>
                         <jsp:useBean id="user" scope="session" type="fr.univlyon1.m1if.m1if03.classes.User"/>
-                        <c:if test="${!todo.completed && todo.getAssignee() != user.getLogin()}">
+                        <c:if test="${!todo.completed && todo.assignee != user.login}">
                             <input type='submit' name='assign' value='Choisir cette tâche'>&nbsp;
                         </c:if>
                     </td>
@@ -37,7 +38,7 @@
                     </td>
                 </tr>
                 <input type='hidden' name='operation' value='update'>
-                <input type='hidden' name='index' value='${todos.getId(todo)}'>
+                <input type='hidden' name='index' value='${loop.index}'>
             </form>
         </c:forEach>
 </table>

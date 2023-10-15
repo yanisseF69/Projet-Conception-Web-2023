@@ -115,8 +115,7 @@ public class Connect extends HttpServlet {
             String login = (String) session.getAttribute("login");
             session.invalidate();
             try {
-
-                ((TodoDao) getServletContext().getAttribute("todos")).unassign(login);
+                ((TodoDao) this.getServletContext().getAttribute("todos")).unassign(login);
                 ((UserDao) this.getServletContext().getAttribute("users")).deleteById(login);
             } catch (NameNotFoundException | InvalidNameException e) {
                 throw new RuntimeException(e);
