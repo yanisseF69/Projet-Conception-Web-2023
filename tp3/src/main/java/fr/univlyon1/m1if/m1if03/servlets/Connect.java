@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if03.servlets;
 
 import fr.univlyon1.m1if.m1if03.classes.User;
 
+import fr.univlyon1.m1if.m1if03.daos.TodoDao;
 import fr.univlyon1.m1if.m1if03.daos.UserDao;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import javax.naming.InvalidNameException;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
@@ -113,8 +115,10 @@ public class Connect extends HttpServlet {
             String login = (String) session.getAttribute("login");
             session.invalidate();
             try {
+
+                ((TodoDao) getServletContext().getAttribute("todos")).unassign(login);
                 ((UserDao) this.getServletContext().getAttribute("users")).deleteById(login);
-            } catch (NameNotFoundException e) {
+            } catch (NameNotFoundException | InvalidNameException e) {
                 throw new RuntimeException(e);
             }
             response.sendRedirect("index.html");
