@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @WebFilter(filterName = "Cache", urlPatterns = {"/todolist"})
 public class Cache extends HttpFilter {
-    private Map<String, Date> todoLastModifiedMap = new HashMap<>();
+    private final Map<String, Date> todoLastModifiedMap = new HashMap<>();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -30,14 +30,13 @@ public class Cache extends HttpFilter {
         Date date = new Date(System.currentTimeMillis());
 
         if (request.getMethod().equals("GET")) {
-            if (todoLastModifiedMap.get(todoId) != null) { //si ok
+            if (todoLastModifiedMap.get(todoId) != null) {
                 long lastModified = request.getDateHeader("If-Modified-Since");
                 Date dateLastModified = new Date(lastModified * 500);
                 Date dateLastModifiedMap = todoLastModifiedMap.get(todoId);
 
 
-                if (dateLastModifiedMap.before(dateLastModified)) { //Si rien modifié
-                    //304 et retourner une page vide.
+                if (dateLastModifiedMap.before(dateLastModified)) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
                 }
