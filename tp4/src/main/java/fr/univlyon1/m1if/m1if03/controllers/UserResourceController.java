@@ -57,7 +57,7 @@ public class UserResourceController extends HttpServlet {
      * @throws IOException Voir doc...
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setHeader("X-test", "doPost");
 
         String[] url = UrlUtils.getUrlParts(request);
@@ -75,6 +75,14 @@ public class UserResourceController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             } catch (NameAlreadyBoundException e) {
                 response.sendError(HttpServletResponse.SC_CONFLICT, "Le login " + login + " n'est plus disponible.");
+            }
+        } else if (url.length == 2) {
+            if (url[1].equals("login") || url[1].equals("logout")) {
+                getServletContext().getNamedDispatcher("UserBusinessController.java").forward(request, response);
+                //// PAS SÛR QUE LA LIGNE DU DESSUS SOIT OK
+            }
+            else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
