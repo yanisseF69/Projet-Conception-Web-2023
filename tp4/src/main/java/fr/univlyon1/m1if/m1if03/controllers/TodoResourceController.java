@@ -4,6 +4,12 @@ import fr.univlyon1.m1if.m1if03.dao.TodoDao;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 
+/**
+ * Contrôleur d'opérations métier "Todos".<br>
+ * Concrètement : gère les opérations de login et de logout.
+ *
+ * @author Yanisse Ferhaoui
+ */
 @WebServlet(name = "TodoRessourceController", urlPatterns = {"/todos", "/todos/*"})
 public class TodoResourceController extends HttpServlet {
 
