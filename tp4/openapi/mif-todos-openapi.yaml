@@ -9,8 +9,8 @@ externalDocs:
 servers:
   - url: "http://localhost:8080/mif_todos_war_exploded"
   - url: "http://localhost:8080/todos"
-  - url: "http://192.168.75.xxx:8080/v3"
-  - url: "https://192.168.75.xxx:8080/api/v3"
+  - url: "http://192.168.75.47:8080/v3"
+  - url: "https://192.168.75.47/api/v3"
 
 tags:
   - name: "users"

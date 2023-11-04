@@ -145,7 +145,8 @@ public class UserResourceController extends HttpServlet {
                     if (url[2].equals("assignedTodos")) {
                         // Construction de la fin de l'URL vers laquelle rediriger
                         String urlEnd = UrlUtils.getUrlEnd(request, 3);
-                        response.sendRedirect("todos" + urlEnd);
+                        response.sendRedirect("/v3/todos" + urlEnd);
+                        response.setStatus(HttpServletResponse.SC_FOUND);
                     } else {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                     }
@@ -343,3 +344,4 @@ public class UserResourceController extends HttpServlet {
         }
     }
 }
+
