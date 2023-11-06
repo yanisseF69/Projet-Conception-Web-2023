@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if03.controllers;
 
 import fr.univlyon1.m1if.m1if03.dao.UserDao;
 import fr.univlyon1.m1if.m1if03.model.User;
+import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
