@@ -65,7 +65,8 @@ public class UserResourceController extends HttpServlet {
         String[] url = UrlUtils.getUrlParts(request);
 
         if (url.length == 1) {// Création d'un utilisateur
-            UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+            //UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+            UserRequestDto requestDto = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
             try {
                 userResource.create(requestDto.getLogin(), requestDto.getPassword(), requestDto.getName());
                 response.setHeader("Location", "users/" + requestDto.getLogin());
@@ -178,7 +179,8 @@ public class UserResourceController extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] url = UrlUtils.getUrlParts(request);
         String login = url[1];
-        UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+        //UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+        UserRequestDto requestDto = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
         if (url.length == 2) {
             try {
                 userResource.update(login, requestDto.getPassword(), requestDto.getName());
