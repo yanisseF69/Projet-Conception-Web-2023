@@ -10,7 +10,7 @@
     <meta http-equiv="refresh" content="5">
 </head>
 <body>
-<h1>Messages</h1>
+<h1>Todos</h1>
 <h2>Liste des todos</h2>
 <ul>
     <c:forEach items="${requestScope.todos}" var="todo">

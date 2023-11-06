@@ -18,6 +18,9 @@ import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Content negociation class.
+ */
 @WebFilter(filterName = "ContentNegotiationFilter")
 public class ContentNegotiationFilter extends HttpFilter {
     @Override
