@@ -62,7 +62,7 @@ public class TodoResourceController extends HttpServlet {
                             request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
                             break;
                         case "hash":
-                            request.setAttribute("todoDto", new TodoResponseDto(null, todoDto.getHash(), null, null));
+                            request.setAttribute("todoDto", new TodoResponseDto(null, todoDto.hashCode(), null, null));
                             request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
                             break;
                         case "assignee":
@@ -82,7 +82,7 @@ public class TodoResourceController extends HttpServlet {
                     // Construction de la fin de l'URL vers laquelle rediriger
                     String urlEnd = UrlUtils.getUrlEnd(request, 3);
                     if (url[2].equals("assignee")) {
-                            response.sendRedirect("/v3/users/" + todo.getAssignee() + urlEnd);
+                            response.sendRedirect(request.getContextPath() + "/user" + urlEnd);
 
                     } else {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -175,7 +175,7 @@ public class TodoResourceController extends HttpServlet {
             if (key == null || key.isEmpty()) {
                 throw new IllegalArgumentException("L'id du message ne doit pas être null ou vide.");
             }
-            return todoDao.findOne(Integer.valueOf(key));
+            return todoDao.findByHash(Integer.parseInt(key));
         }
 
 
