@@ -6,7 +6,6 @@ import fr.univlyon1.m1if.m1if03.dto.todo.TodoResponseDto;
 import fr.univlyon1.m1if.m1if03.exceptions.ForbiddenLoginException;
 import fr.univlyon1.m1if.m1if03.model.Todo;
 import fr.univlyon1.m1if.m1if03.utils.UrlUtils;
-import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,10 +31,11 @@ public class TodoResourceController extends HttpServlet {
 
     private TodoRessource todoRessource;
     private TodoDtoMapper todoMapper;
+    private TodoDao todoDao;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        TodoDao todoDao = (TodoDao) config.getServletContext().getAttribute("todoDao");
+        todoDao = (TodoDao) config.getServletContext().getAttribute("todoDao");
         todoMapper = new TodoDtoMapper(config.getServletContext());
         todoRessource = new TodoRessource(todoDao);
     }
@@ -81,12 +81,12 @@ public class TodoResourceController extends HttpServlet {
                     break;
                 default: // redirige vers l'URL qui devrait correspondre à la sous-priorité demandée (qu'elle existe ou pas ne concerne pas ce contrôleur)
                     // Construction de la fin de l'URL vers laquelle rediriger
-                    String urlEnd = UrlUtils.getUrlEnd(request, 3);
                     if (url[2].equals("assignee")) {
-                            response.sendRedirect(request.getContextPath() + "/user" + urlEnd);
-
+                        // Construction de la fin de l'URL vers laquelle rediriger
+                        String urlEnd = UrlUtils.getUrlEnd(request, 3);
+                        response.sendRedirect(request.getContextPath() + "/users" + urlEnd);
                     } else {
-                        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Trop de paramètres dans l'URI.");
                     }
 
             }
@@ -139,10 +139,10 @@ public class TodoResourceController extends HttpServlet {
 
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String[] url = UrlUtils.getUrlParts(request);
-        String todoId = url[1];
+        String key = url[1];
         if (url.length == 2) {
             try {
-                todoRessource.delete(todoId);
+                todoRessource.delete(key);
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
             } catch (IllegalArgumentException | NameNotFoundException | InvalidNameException ex) {
@@ -176,16 +176,16 @@ public class TodoResourceController extends HttpServlet {
             if (key == null || key.isEmpty()) {
                 throw new IllegalArgumentException("L'id du message ne doit pas être null ou vide.");
             }
-            return todoDao.findByHash(Integer.parseInt(key));
+            return todoDao.findOne(Integer.parseInt(key));
         }
 
 
 
-        public void delete(@NotNull String login) throws IllegalArgumentException, NameNotFoundException, InvalidNameException {
-            if (login == null || login.isEmpty()) {
+        public void delete(String key) throws IllegalArgumentException, NameNotFoundException, InvalidNameException {
+            if (key == null || key.isEmpty()) {
                 throw new IllegalArgumentException("Le login ne doit pas être null ou vide.");
             }
-            todoDao.deleteById(login);
+            todoDao.delete(todoDao.findOne(Integer.parseInt(key)));
         }
 
         public void update(String oldTitle, String title, String assignee) throws IllegalArgumentException, InvalidNameException, NameNotFoundException {

@@ -2,7 +2,6 @@ package fr.univlyon1.m1if.m1if03.controllers;
 
 import fr.univlyon1.m1if.m1if03.dao.TodoDao;
 import fr.univlyon1.m1if.m1if03.model.Todo;
-import fr.univlyon1.m1if.m1if03.model.User;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -48,23 +47,12 @@ public class TodoBusinessController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getRequestURI().endsWith("toggleStatus")) {
             // TODO Parsing des paramètres "old school". Sera amélioré par la suite.
-            User user = (User) request.getSession().getAttribute("user");
             String hash = request.getParameter("hash");
-            String login = user.getLogin();
-            if (login != null && !login.isEmpty()) {
                 try {
-                    Todo todo = todoDao.findByHash(Integer.parseInt(hash));
-                    if (login.equals(todo.getAssignee())) {
-                        todoBusiness.changeStatus(hash);
+                        todoBusiness.changeStatus(Integer.parseInt(hash));
                         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                    } else {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Les login et l'assignee ne correspondent pas.");
-                    }
-                } catch (IllegalArgumentException | InvalidNameException ex) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-                }
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    } catch (InvalidNameException e) {
+                    throw new RuntimeException(e);
             }
         } else {
             // Ne devrait pas arriver mais sait-on jamais...
@@ -91,8 +79,8 @@ public class TodoBusinessController extends HttpServlet {
             this.todoDao = todoDao;
         }
 
-        public void changeStatus(@NotNull String todoId) throws InvalidNameException {
-            Todo todo = todoDao.findByHash(Integer.parseInt(todoId));
+        public void changeStatus(@NotNull int hash) throws InvalidNameException {
+            Todo todo = todoDao.findByHash(hash);
             todo.setCompleted(!todo.isCompleted());
             todoDao.update(todoDao.getId(todo), todo);
         }
