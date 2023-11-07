@@ -1,13 +1,18 @@
 package fr.univlyon1.m1if.m1if03.filters;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Filtre d'authentification.
@@ -25,14 +30,14 @@ import java.io.IOException;
 public class AuthenticationFilter extends HttpFilter {
     private static final String[] WHITELIST = {"/", "/index.html", "/login.html", "/css/style.css", "/users", "/users/", "/users/login"};
 
-   @Override
+    @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // Permet de retrouver la fin de l'URL (après l'URL du contexte) -> indépendant de l'URL de déploiement
         String url = request.getRequestURI().replace(request.getContextPath(), "");
 
         // 1) Laisse passer les URLs ne nécessitant pas d'authentification
-        for(String tempUrl: WHITELIST) {
-            if(url.equals(tempUrl)) {
+        for (String tempUrl : WHITELIST) {
+            if (url.equals(tempUrl)) {
                 chain.doFilter(request, response);
                 return;
             }
@@ -42,7 +47,8 @@ public class AuthenticationFilter extends HttpFilter {
         // Note :
         //   le paramètre false dans request.getSession(false) permet de récupérer null si la session n'est pas déjà créée.
         //   Sinon, l'appel de la méthode getSession() la crée automatiquement.
-        if(request.getSession(false) != null && request.getSession(false).getAttribute("user") != null) {
+        //if(request.getSession(false) != null && request.getSession(false).getAttribute("user") != null) {
+        if (isAuthenticated(request)) {
             chain.doFilter(request, response);
             return;
         }
@@ -50,4 +56,30 @@ public class AuthenticationFilter extends HttpFilter {
         // 3) Bloque les autres requêtes
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Vous devez vous connecter pour accéder au site.");
     }
+
+    private boolean isAuthenticated(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+
+            try {
+                DecodedJWT decodedJWT = JWT.decode(token);
+                Date expirationDate = decodedJWT.getExpiresAt();
+
+                if (expirationDate != null) {
+                    Date currentTime = new Date();
+                    if (currentTime.before(expirationDate)) {
+                        TodosM1if03JwtHelper.verifyToken(token, request);
+                        return true;
+                    }
+                }
+            } catch (JWTVerificationException e) {
+                return false;
+            }
+        }
+        return false;
+    }
 }
+
+
