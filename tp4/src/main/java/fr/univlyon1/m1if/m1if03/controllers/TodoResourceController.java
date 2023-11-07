@@ -2,6 +2,7 @@ package fr.univlyon1.m1if.m1if03.controllers;
 
 import fr.univlyon1.m1if.m1if03.dao.TodoDao;
 import fr.univlyon1.m1if.m1if03.dto.todo.TodoDtoMapper;
+import fr.univlyon1.m1if.m1if03.dto.todo.TodoRequestDto;
 import fr.univlyon1.m1if.m1if03.dto.todo.TodoResponseDto;
 import fr.univlyon1.m1if.m1if03.exceptions.ForbiddenLoginException;
 import fr.univlyon1.m1if.m1if03.model.Todo;
@@ -104,6 +105,8 @@ public class TodoResourceController extends HttpServlet {
             case 1:
                 String creator = request.getParameter("creator");
                 String title = request.getParameter("title");
+
+                TodoRequestDto body = (TodoRequestDto)ContentNegotiationHelper.getDtoFromRequest(request, TodoRequestDto.class);
                 try {
                     int id = todoRessource.create(title, creator);
                     response.setHeader("Location", "todos/" + id);
@@ -121,21 +124,31 @@ public class TodoResourceController extends HttpServlet {
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] url = UrlUtils.getUrlParts(request);
         String todoId = url[1];
+        TodoRequestDto body = (TodoRequestDto)ContentNegotiationHelper.getDtoFromRequest(request, TodoRequestDto.class);
 
-        String title = request.getParameter("title");
-        String assignee = request.getParameter("login");
+        String title = body.getTitle();
+        String assignee = body.getAssignee();
+        //String title = request.getParameter("title");
+        //String assignee = request.getParameter("login");
 
         if (url.length == 2) {
             try {
-                todoRessource.update(todoId, title, assignee);
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            } catch (IllegalArgumentException | NameNotFoundException | InvalidNameException ex) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+                try {
+                    todoRessource.update(todoId, title, assignee);
+                    response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                } catch (InvalidNameException e) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+                } catch (NameNotFoundException e) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+                }
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
             }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
 
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String[] url = UrlUtils.getUrlParts(request);
