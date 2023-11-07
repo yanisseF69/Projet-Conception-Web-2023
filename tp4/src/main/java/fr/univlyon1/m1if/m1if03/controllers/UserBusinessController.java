@@ -3,13 +3,14 @@ package fr.univlyon1.m1if.m1if03.controllers;
 import fr.univlyon1.m1if.m1if03.dao.UserDao;
 import fr.univlyon1.m1if.m1if03.dto.user.UserRequestDto;
 import fr.univlyon1.m1if.m1if03.model.User;
+import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+//import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 
 import javax.naming.InvalidNameException;
@@ -48,7 +49,7 @@ public class UserBusinessController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getRequestURI().endsWith("login")) {
-            UserRequestDto body = (UserRequestDto)ContentNegotiationHelper.getDtoFromRequest(request,UserRequestDto.class);
+            UserRequestDto body = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request,UserRequestDto.class);
             String login = body.getLogin();
             String password = body.getPassword();
             //String login = request.getParameter("login");
@@ -123,8 +124,9 @@ public class UserBusinessController extends HttpServlet {
             User user = userDao.findOne(login);
             if (user.verifyPassword(password)) {
                 // Gestion de la session utilisateur
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", user);
+                //HttpSession session = request.getSession(true);
+                //session.setAttribute("user", user);
+
                 return true;
             } else {
                 return false;
@@ -138,9 +140,9 @@ public class UserBusinessController extends HttpServlet {
          *
          * @param request  la requête qui contient la session à invalider
          */
-        public void userLogout(HttpServletRequest request) {
-            request.getSession().invalidate();
-        }
+        //public void userLogout(HttpServletRequest request) {
+        //    request.getSession().invalidate();
+        //}
         //</editor-fold>
     }
 }
