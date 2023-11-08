@@ -64,7 +64,11 @@ public class AuthenticationFilter extends HttpFilter {
             String token = authorizationHeader.substring(7);
 
             try {
+                String login = TodosM1if03JwtHelper.verifyToken(token, request);
+                request.setAttribute("login", login);
+
                 DecodedJWT decodedJWT = JWT.decode(token);
+
                 Date expirationDate = decodedJWT.getExpiresAt();
 
                 if (expirationDate != null) {
@@ -74,6 +78,9 @@ public class AuthenticationFilter extends HttpFilter {
                         return true;
                     }
                 }
+
+                return true;
+
             } catch (JWTVerificationException e) {
                 return false;
             }
