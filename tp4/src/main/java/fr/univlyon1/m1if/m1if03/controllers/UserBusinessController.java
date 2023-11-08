@@ -123,15 +123,8 @@ public class UserBusinessController extends HttpServlet {
                 throw new IllegalArgumentException("Le login ne doit pas être null ou vide.");
             }
             User user = userDao.findOne(login);
-            if (user.verifyPassword(password)) {
-                 //Gestion de la session utilisateur
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", user);
+            return user.verifyPassword(password);
 
-                return true;
-            } else {
-                return false;
-            }
         }
 
         /**
@@ -141,9 +134,9 @@ public class UserBusinessController extends HttpServlet {
          *
          * @param request  la requête qui contient la session à invalider
          */
-        public void userLogout(HttpServletRequest request) {
+        /*public void userLogout(HttpServletRequest request) {
             request.getSession().invalidate();
-        }
+        }*/
         //</editor-fold>
     }
 }

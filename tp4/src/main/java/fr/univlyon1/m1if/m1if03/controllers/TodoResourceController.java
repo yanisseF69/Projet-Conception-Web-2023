@@ -55,25 +55,25 @@ public class TodoResourceController extends HttpServlet {
             switch (url.length) {
                 case 2: // renvoie un DTO de Todo (avec toutes les infos le concernant pour pouvoir le templater dans la vue)
                     request.setAttribute("model", todoDto);
-                    request.setAttribute("view", "todo");
+                    request.setAttribute("view", "todos");
                     break;
                 case 3: // renvoie une propriété d'un todo
                     switch (url[2]) {
                         case "title":
                             request.setAttribute("model", new TodoResponseDto(todoDto.getTitle(), todoDto.getHash(), null, null));
-                            request.setAttribute("view", "todo");
+                            request.setAttribute("view", "todos");
                             break;
                         case "hash":
                             request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, null));
-                            request.setAttribute("view", "todo");
+                            request.setAttribute("view", "todos");
                             break;
                         case "assignee":
                             request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), todoDto.getAssignee(), null));
-                            request.setAttribute("view", "todo");
+                            request.setAttribute("view", "todos");
                             break;
                         case "status":
                             request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, todoDto.getCompleted()));
-                            request.setAttribute("view", "todo");
+                            request.setAttribute("view", "todos");
                             break;
                         default:
                             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
