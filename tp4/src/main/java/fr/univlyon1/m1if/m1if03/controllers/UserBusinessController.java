@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 //import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 
 import javax.naming.InvalidNameException;
@@ -123,9 +124,9 @@ public class UserBusinessController extends HttpServlet {
             }
             User user = userDao.findOne(login);
             if (user.verifyPassword(password)) {
-                // Gestion de la session utilisateur
-                //HttpSession session = request.getSession(true);
-                //session.setAttribute("user", user);
+                 //Gestion de la session utilisateur
+                HttpSession session = request.getSession(true);
+                session.setAttribute("user", user);
 
                 return true;
             } else {
@@ -140,9 +141,9 @@ public class UserBusinessController extends HttpServlet {
          *
          * @param request  la requête qui contient la session à invalider
          */
-        //public void userLogout(HttpServletRequest request) {
-        //    request.getSession().invalidate();
-        //}
+        public void userLogout(HttpServletRequest request) {
+            request.getSession().invalidate();
+        }
         //</editor-fold>
     }
 }

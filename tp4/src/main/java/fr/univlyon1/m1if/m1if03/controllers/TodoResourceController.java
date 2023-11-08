@@ -21,7 +21,6 @@ import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-
 /**
  * Contrôleur d'opérations métier "Todos".<br>
  * Concrètement : gère les opérations de login et de logout.
@@ -44,7 +43,7 @@ public class TodoResourceController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] url = UrlUtils.getUrlParts(request);
-
+        System.out.println("oueoue");
         if (url.length == 1) { // renvoie la liste de tout les todos (je crois...)
             request.setAttribute("todos", todoRessource.readAll());
             request.getRequestDispatcher("/WEB-INF/components/todos.jsp").include(request, response);
@@ -55,26 +54,26 @@ public class TodoResourceController extends HttpServlet {
             TodoResponseDto todoDto = todoMapper.toDto(todo);
             switch (url.length) {
                 case 2: // renvoie un DTO de Todo (avec toutes les infos le concernant pour pouvoir le templater dans la vue)
-                        request.setAttribute("todoDto", todoDto);
-                        request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
+                    request.setAttribute("model", todoDto);
+                    request.setAttribute("view", "todo");
                     break;
                 case 3: // renvoie une propriété d'un todo
                     switch (url[2]) {
                         case "title":
-                            request.setAttribute("todoDto", new TodoResponseDto(todoDto.getTitle(), todoDto.getHash(), null, null));
-                            request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
+                            request.setAttribute("model", new TodoResponseDto(todoDto.getTitle(), todoDto.getHash(), null, null));
+                            request.setAttribute("view", "todo");
                             break;
                         case "hash":
-                            request.setAttribute("todoDto", new TodoResponseDto(null, todoDto.hashCode(), null, null));
-                            request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
+                            request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, null));
+                            request.setAttribute("view", "todo");
                             break;
                         case "assignee":
-                            request.setAttribute("todoDto", new TodoResponseDto(null, todoDto.getHash(), todoDto.getAssignee(), null));
-                            request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
+                            request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), todoDto.getAssignee(), null));
+                            request.setAttribute("view", "todo");
                             break;
                         case "status":
-                            request.setAttribute("todoDto", new TodoResponseDto(null, todoDto.getHash(), null, todoDto.getCompleted()));
-                            request.getRequestDispatcher("/WEB-INF/components/todo.jsp").include(request, response);
+                            request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, todoDto.getCompleted()));
+                            request.setAttribute("view", "todo");
                             break;
                         default:
                             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -85,7 +84,9 @@ public class TodoResourceController extends HttpServlet {
                     // Construction de la fin de l'URL vers laquelle rediriger
                     if (url[2].equals("assignee")) {
                         // Construction de la fin de l'URL vers laquelle rediriger
-                        String urlEnd = UrlUtils.getUrlEnd(request, 3);
+                        String urlEnd = UrlUtils.getUrlEnd(request, 2);
+                        System.out.println(urlEnd);
+                        System.out.println("oueoue");
                         response.sendRedirect(request.getContextPath() + "/users" + urlEnd);
                     } else {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Trop de paramètres dans l'URI.");
@@ -129,9 +130,6 @@ public class TodoResourceController extends HttpServlet {
 
         String title = body.getTitle();
         String assignee = body.getAssignee();
-        //String title = request.getParameter("title");
-        //String assignee = request.getParameter("login");
-
         if (url.length == 2) {
             try {
                 try {
@@ -203,7 +201,7 @@ public class TodoResourceController extends HttpServlet {
         }
 
         public void update(String oldTitle, String title, String assignee) throws IllegalArgumentException, InvalidNameException, NameNotFoundException {
-            Todo todo = readOne(oldTitle);
+            Todo todo = todoDao.findOne(oldTitle);
             todo.setTitle(title);
             todo.setAssignee(assignee);
         }
