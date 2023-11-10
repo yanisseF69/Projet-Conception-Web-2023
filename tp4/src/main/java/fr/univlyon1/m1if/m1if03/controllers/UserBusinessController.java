@@ -1,22 +1,26 @@
 package fr.univlyon1.m1if.m1if03.controllers;
 
+import fr.univlyon1.m1if.m1if03.dao.TodoDao;
 import fr.univlyon1.m1if.m1if03.dao.UserDao;
 import fr.univlyon1.m1if.m1if03.dto.user.UserRequestDto;
+import fr.univlyon1.m1if.m1if03.filters.AuthenticationFilter;
+import fr.univlyon1.m1if.m1if03.model.Todo;
 import fr.univlyon1.m1if.m1if03.model.User;
 import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
+import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-//import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 
 import javax.naming.InvalidNameException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Contrôleur d'opérations métier "users".<br>
@@ -27,6 +31,7 @@ import java.io.IOException;
 @WebServlet(name = "UserBusinessController", urlPatterns = {"/users/login", "/users/logout"})
 public class UserBusinessController extends HttpServlet {
     private UserBusiness userBusiness;
+    private TodoDao todoDao;
 
     //<editor-fold desc="Méthode de gestion du cycle de vie">
     @Override
@@ -34,6 +39,7 @@ public class UserBusinessController extends HttpServlet {
         super.init(config);
         UserDao userDao = (UserDao) config.getServletContext().getAttribute("userDao");
         userBusiness = new UserBusiness(userDao);
+        todoDao = (TodoDao) config.getServletContext().getAttribute("todoDao");
     }
     //</editor-fold>
 
@@ -59,6 +65,12 @@ public class UserBusinessController extends HttpServlet {
             if (login != null && !login.isEmpty()) {
                 try {
                     if (userBusiness.userLogin(login, password, request)) {
+                        List<Integer> assignedTo = new ArrayList<Integer>();
+                        for(Todo todo: todoDao.findByAssignee(login)) {
+                            assignedTo.add(todo.hashCode());
+                        }
+                        String authToken = TodosM1if03JwtHelper.generateToken(login, assignedTo, request);
+                        response.setHeader("Authorization", "Bearer " + authToken);
                         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     } else {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Les login et mot de passe ne correspondent pas.");
@@ -74,6 +86,9 @@ public class UserBusinessController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
         } else if (request.getRequestURI().endsWith("logout")) {
+            String authHeader = request.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            AuthenticationFilter.disconnect(token);
             //userBusiness.userLogout(request);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
@@ -124,27 +139,10 @@ public class UserBusinessController extends HttpServlet {
                 throw new IllegalArgumentException("Le login ne doit pas être null ou vide.");
             }
             User user = userDao.findOne(login);
-            if (user.verifyPassword(password)) {
-                 //Gestion de la session utilisateur
-                HttpSession session = request.getSession(true);
-                session.setAttribute("user", user);
+            return user.verifyPassword(password);
 
-                return true;
-            } else {
-                return false;
-            }
         }
 
-        /**
-         * Réalise l'opération de logout d'un utilisateur.<br>
-         * Renvoie un code HTTP 204 (No Content).<br>
-         * En première approximation, ne renvoie pas d'erreur si le client n'était pas logué.
-         *
-         * @param request  la requête qui contient la session à invalider
-         */
-        public void userLogout(HttpServletRequest request) {
-            request.getSession().invalidate();
-        }
         //</editor-fold>
     }
 }

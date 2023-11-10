@@ -7,6 +7,7 @@ import fr.univlyon1.m1if.m1if03.dto.todo.TodoResponseDto;
 import fr.univlyon1.m1if.m1if03.exceptions.ForbiddenLoginException;
 import fr.univlyon1.m1if.m1if03.model.Todo;
 import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
+import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 import fr.univlyon1.m1if.m1if03.utils.UrlUtils;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -20,7 +21,10 @@ import javax.naming.InvalidNameException;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 /**
  * Contrôleur d'opérations métier "Todos".<br>
  * Concrètement : gère les opérations de login et de logout.
@@ -43,7 +47,6 @@ public class TodoResourceController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] url = UrlUtils.getUrlParts(request);
-        System.out.println("oueoue");
         if (url.length == 1) { // renvoie la liste de tout les todos (je crois...)
             request.setAttribute("todos", todoRessource.readAll());
             request.getRequestDispatcher("/WEB-INF/components/todos.jsp").include(request, response);
@@ -55,7 +58,7 @@ public class TodoResourceController extends HttpServlet {
             switch (url.length) {
                 case 2: // renvoie un DTO de Todo (avec toutes les infos le concernant pour pouvoir le templater dans la vue)
                     request.setAttribute("model", todoDto);
-                    request.setAttribute("view", "todo");
+                    request.setAttribute("view", "todos");
                     break;
                 case 3: // renvoie une propriété d'un todo
                     switch (url[2]) {
@@ -84,10 +87,8 @@ public class TodoResourceController extends HttpServlet {
                     // Construction de la fin de l'URL vers laquelle rediriger
                     if (url[2].equals("assignee")) {
                         // Construction de la fin de l'URL vers laquelle rediriger
-                        String urlEnd = UrlUtils.getUrlEnd(request, 2);
-                        System.out.println(urlEnd);
-                        System.out.println("oueoue");
-                        response.sendRedirect(request.getContextPath() + "/users" + urlEnd);
+                        String urlEnd = UrlUtils.getUrlEnd(request, 3);
+                        response.sendRedirect(request.getContextPath() + todo.getAssignee() + urlEnd);
                     } else {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Trop de paramètres dans l'URI.");
                     }
@@ -105,11 +106,21 @@ public class TodoResourceController extends HttpServlet {
 
         switch (url.length) {
             case 1:
-                String creator = request.getParameter("creator");
-                String title = request.getParameter("title");
 
                 TodoRequestDto body = (TodoRequestDto)ContentNegotiationHelper.getDtoFromRequest(request, TodoRequestDto.class);
+
+                String title = body.getTitle();
+                String creator = body.getCreator();
+                String assignee = body.getAssignee();
+
                 try {
+                    List<Integer> assignedTo = new ArrayList<Integer>();
+                    for(Todo todo: todoDao.findByAssignee((String) request.getAttribute("login"))) {
+                        assignedTo.add(todo.hashCode());
+                    }
+                    String authToken = TodosM1if03JwtHelper.generateToken(assignee, assignedTo, request);
+                    response.setHeader("Authorization", "Bearer " + authToken);
+
                     int id = todoRessource.create(title, creator);
                     response.setHeader("Location", "todos/" + id);
                     response.setStatus(HttpServletResponse.SC_CREATED);
@@ -133,6 +144,10 @@ public class TodoResourceController extends HttpServlet {
         if (url.length == 2) {
             try {
                 try {
+                    Todo todo = todoRessource.readOne(todoId);
+                    if (!(todo.getAssignee().equals(request.getAttribute("login")))) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    }
                     todoRessource.update(todoId, title, assignee);
                     response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 } catch (InvalidNameException e) {
