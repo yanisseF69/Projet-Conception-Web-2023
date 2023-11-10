@@ -50,7 +50,8 @@ public class UserBusinessController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getRequestURI().endsWith("login")) {
-            UserRequestDto body = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
+            //UserRequestDto body = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
+            UserRequestDto 
             String login = body.getLogin();
             String password = body.getPassword();
             //String login = request.getParameter("login");
