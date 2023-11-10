@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -29,6 +30,7 @@ import java.util.Date;
 @WebFilter
 public class AuthenticationFilter extends HttpFilter {
     private static final String[] WHITELIST = {"/", "/index.html", "/login.html", "/css/style.css", "/users", "/users/", "/users/login"};
+    private static ArrayList<String> disconnect = new ArrayList<>();
 
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -63,6 +65,7 @@ public class AuthenticationFilter extends HttpFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
 
+
             try {
                 String login = TodosM1if03JwtHelper.verifyToken(token, request);
                 request.setAttribute("login", login);
@@ -86,6 +89,9 @@ public class AuthenticationFilter extends HttpFilter {
             }
         }
         return false;
+    }
+    public static void disconnect(String jwt) {
+        disconnect.add(jwt);
     }
 }
 
