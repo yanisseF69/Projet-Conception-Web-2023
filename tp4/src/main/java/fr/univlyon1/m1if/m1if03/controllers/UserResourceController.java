@@ -6,7 +6,6 @@ import fr.univlyon1.m1if.m1if03.dto.user.UserRequestDto;
 import fr.univlyon1.m1if.m1if03.dto.user.UserResponseDto;
 import fr.univlyon1.m1if.m1if03.exceptions.ForbiddenLoginException;
 import fr.univlyon1.m1if.m1if03.model.User;
-import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import fr.univlyon1.m1if.m1if03.utils.UrlUtils;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -65,8 +64,8 @@ public class UserResourceController extends HttpServlet {
         String[] url = UrlUtils.getUrlParts(request);
 
         if (url.length == 1) {// Création d'un utilisateur
-            //UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
-            UserRequestDto requestDto = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
+            UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+
             try {
                 userResource.create(requestDto.getLogin(), requestDto.getPassword(), requestDto.getName());
                 response.setHeader("Location", "users/" + requestDto.getLogin());
@@ -179,8 +178,8 @@ public class UserResourceController extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] url = UrlUtils.getUrlParts(request);
         String login = url[1];
-        //UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
-        UserRequestDto requestDto = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
+        UserRequestDto requestDto = (UserRequestDto) request.getAttribute("dto");
+
         if (url.length == 2) {
             try {
                 userResource.update(login, requestDto.getPassword(), requestDto.getName());

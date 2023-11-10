@@ -1,6 +1,7 @@
 package fr.univlyon1.m1if.m1if03.controllers;
 
 import fr.univlyon1.m1if.m1if03.dao.TodoDao;
+import fr.univlyon1.m1if.m1if03.dto.todo.TodoRequestDto;
 import fr.univlyon1.m1if.m1if03.model.Todo;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -46,9 +47,9 @@ public class TodoBusinessController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getRequestURI().endsWith("toggleStatus")) {
-            // TODO Parsing des paramètres "old school". Sera amélioré par la suite.
-            //TodoRequestDto body = (TodoRequestDto) ContentNegotiationHelper.getDtoFromRequest(request,
-                    //TodoRequestDto.class);
+
+            TodoRequestDto body = (TodoRequestDto) request.getAttribute("dto");
+
             String hash = request.getParameter("hash");
                 try {
                         todoBusiness.changeStatus(Integer.parseInt(hash));

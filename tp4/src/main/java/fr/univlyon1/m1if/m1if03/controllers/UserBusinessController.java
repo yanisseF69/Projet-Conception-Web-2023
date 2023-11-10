@@ -6,7 +6,6 @@ import fr.univlyon1.m1if.m1if03.dto.user.UserRequestDto;
 import fr.univlyon1.m1if.m1if03.filters.AuthenticationFilter;
 import fr.univlyon1.m1if.m1if03.model.Todo;
 import fr.univlyon1.m1if.m1if03.model.User;
-import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -56,8 +55,7 @@ public class UserBusinessController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getRequestURI().endsWith("login")) {
-            //UserRequestDto body = (UserRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, UserRequestDto.class);
-            UserRequestDto 
+            UserRequestDto body = (UserRequestDto) request.getAttribute("dto");
             String login = body.getLogin();
             String password = body.getPassword();
             //String login = request.getParameter("login");

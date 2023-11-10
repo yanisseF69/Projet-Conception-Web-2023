@@ -6,7 +6,6 @@ import fr.univlyon1.m1if.m1if03.dto.todo.TodoRequestDto;
 import fr.univlyon1.m1if.m1if03.dto.todo.TodoResponseDto;
 import fr.univlyon1.m1if.m1if03.exceptions.ForbiddenLoginException;
 import fr.univlyon1.m1if.m1if03.model.Todo;
-import fr.univlyon1.m1if.m1if03.utils.ContentNegotiationHelper;
 import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
 import fr.univlyon1.m1if.m1if03.utils.UrlUtils;
 import jakarta.servlet.ServletConfig;
@@ -107,7 +106,7 @@ public class TodoResourceController extends HttpServlet {
         switch (url.length) {
             case 1:
 
-                TodoRequestDto body = (TodoRequestDto)ContentNegotiationHelper.getDtoFromRequest(request, TodoRequestDto.class);
+                TodoRequestDto body = (TodoRequestDto) request.getAttribute("dto");
 
                 String title = body.getTitle();
                 String creator = body.getCreator();
@@ -137,7 +136,8 @@ public class TodoResourceController extends HttpServlet {
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] url = UrlUtils.getUrlParts(request);
         String todoId = url[1];
-        TodoRequestDto body = (TodoRequestDto) ContentNegotiationHelper.getDtoFromRequest(request, TodoRequestDto.class);
+
+        TodoRequestDto body = (TodoRequestDto) request.getAttribute("userDto");
 
         String title = body.getTitle();
         String assignee = body.getAssignee();
