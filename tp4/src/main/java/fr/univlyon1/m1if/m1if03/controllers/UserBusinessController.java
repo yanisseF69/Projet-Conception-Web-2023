@@ -3,7 +3,6 @@ package fr.univlyon1.m1if.m1if03.controllers;
 import fr.univlyon1.m1if.m1if03.dao.TodoDao;
 import fr.univlyon1.m1if.m1if03.dao.UserDao;
 import fr.univlyon1.m1if.m1if03.dto.user.UserRequestDto;
-import fr.univlyon1.m1if.m1if03.filters.AuthenticationFilter;
 import fr.univlyon1.m1if.m1if03.model.Todo;
 import fr.univlyon1.m1if.m1if03.model.User;
 import fr.univlyon1.m1if.m1if03.utils.TodosM1if03JwtHelper;
@@ -86,8 +85,6 @@ public class UserBusinessController extends HttpServlet {
         } else if (request.getRequestURI().endsWith("logout")) {
             String authHeader = request.getHeader("Authorization");
             String token = authHeader.substring(7);
-            AuthenticationFilter.disconnect(token);
-            //userBusiness.userLogout(request);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
             // Ne devrait pas arriver mais sait-on jamais...

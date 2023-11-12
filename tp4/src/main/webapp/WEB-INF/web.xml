@@ -22,6 +22,10 @@
             <param-name>cors.allowed.headers</param-name>
             <param-value>Content-Type,Accept,Authorization</param-value>
         </init-param>
+        <init-param>
+            <param-name>cors.exposed.headers</param-name>
+            <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials,Accept,Origin,Content-Type,Authorization</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>CorsFilter</filter-name>
@@ -38,11 +42,31 @@
     <filter>
         <filter-name>AuthorizationFilter</filter-name>
         <filter-class>fr.univlyon1.m1if.m1if03.filters.AuthorizationFilter</filter-class>
+        <init-param>
+            <param-name>viewsPathPrefix</param-name>
+            <param-value>/WEB-INF/components/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>viewFileSuffix</param-name>
+            <param-value>.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>defaultMimeType</param-name>
+            <param-value>text/html</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>AuthorizationFilter</filter-name>
-        <url-pattern>/users*</url-pattern>
-        <url-pattern>/todos*</url-pattern>
+        <url-pattern>/users/*</url-pattern>
+        <url-pattern>/todos/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UserCache</filter-name>
+        <url-pattern>/users</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TodoCache</filter-name>
+        <url-pattern>/todos</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>ContentNegotiationFilter</filter-name>
@@ -50,7 +74,11 @@
     </filter>
     <filter-mapping>
         <filter-name>ContentNegotiationFilter</filter-name>
-        <url-pattern>/users*</url-pattern>
-        <url-pattern>/todos*</url-pattern>
+        <url-pattern>/users/*</url-pattern>
+        <url-pattern>/todos/*</url-pattern>
+        <url-pattern>/users/</url-pattern>
+        <url-pattern>/todos/</url-pattern>
+
     </filter-mapping>
+
 </web-app>

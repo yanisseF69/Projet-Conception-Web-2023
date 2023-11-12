@@ -21,7 +21,7 @@ import java.util.Date;
 public final class TodosM1if03JwtHelper {
     private static final String SECRET = "monsecret2023";
     private static final String ISSUER = "MIF-TODOS 2023";
-    private static final long LIFETIME = 18000; // Durée de vie d'un token : 30 minutes ; vous pouvez le modifier pour tester
+    private static final long LIFETIME = 1800; // Durée de vie d'un token : 30 minutes ; vous pouvez le modifier pour tester
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET);
 
     /**

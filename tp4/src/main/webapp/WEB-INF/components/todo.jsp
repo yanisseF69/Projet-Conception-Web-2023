@@ -10,24 +10,28 @@
 <body>
 <h1>Message</h1>
 
-<c:if test="${requestScope.todoDto.title != null}">
+<c:if test="${requestScope.model.title != null}">
     <h2>Titre</h2>
-    <p><a href="${pageContext.request.contextPath}/todos/${requestScope.todoDto.title}">${requestScope.todoDto.title}</a></p>
+    <p><a href="${pageContext.request.contextPath}/todos/${requestScope.model.title}">${requestScope.model.title}</a></p>
 </c:if>
 
-<c:if test="${requestScope.todoDto.assignee != null}">
+<c:if test="${requestScope.model.assignee != null}">
     <h2>Assignee</h2>
-    <p><a href="${pageContext.request.contextPath}/users/${requestScope.todoDto.assignee}">${requestScope.todoDto.assignee}</a></p>
+    <p><a href="${pageContext.request.contextPath}/users/${requestScope.model.assignee}">${requestScope.model.assignee}</a></p>
 </c:if>
 
-<c:if test="${requestScope.todoDto.hash != null}">
+<c:if test="${requestScope.model.hash != null}">
     <h2>Texte</h2>
-    <p><c:out value="${requestScope.todoDto.hash}"/></p>
+    <p><c:out value="${requestScope.model.hash}"/></p>
 </c:if>
 
-<c:if test="${requestScope.todoDto.completed != null}">
+<c:if test="${requestScope.model.completed != null && requestScope.model.completed == true}">
     <h2>Texte</h2>
-    <p><c:out value="${requestScope.todoDto.completed}"/></p>
+    <p>&#x2610</p>
+</c:if>
+<c:if test="${requestScope.model.completed == null}">
+    <h2>Texte</h2>
+    <p>&#x2611</p>
 </c:if>
 
 </body>

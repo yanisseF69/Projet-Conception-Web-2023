@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>
 <body>
-<c:set var="user" value="${requestScope.userDto}" scope="request"/>
+<c:set var="user" value="${requestScope.model}" scope="request"/>
 
 <h1>Utilisateur ${user.login}</h1>
 <ul>
@@ -18,8 +18,8 @@
     <li>
         Todos:
         <ul>
-            <c:forEach items="${user.assignedTodos}" var="todoHash">
-                <li><a href="${pageContext.request.contextPath}/todos/${todoHash}">${applicationScope.todoDao.findByHash(todoHash).title}</a></li>
+            <c:forEach items="${user.assignedTodos}" var="todo">
+                <li><a href="${pageContext.request.contextPath}/todos/${todo}">${applicationScope.todoDao.findOne(todo).title}</a></li>
             </c:forEach>
         </ul>
     </li>

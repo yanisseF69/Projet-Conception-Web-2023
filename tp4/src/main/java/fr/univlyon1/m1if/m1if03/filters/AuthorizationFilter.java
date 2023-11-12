@@ -40,6 +40,9 @@ public class AuthorizationFilter extends HttpFilter {
             {"POST", "todos", "toggleStatus"},
             {"*", "todos", "*", "assignee"}
     };
+    private String viewsPathPrefix;
+    private String viewFileSuffix;
+    private String defaultMimeType;
 
     // Liste des ressources qui
     private static final String[][] RESOURCES_WITH_LIMITATIONS = {
@@ -49,6 +52,9 @@ public class AuthorizationFilter extends HttpFilter {
 
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
+        viewsPathPrefix = config.getInitParameter("viewsPathPrefix");
+        viewFileSuffix = config.getInitParameter("viewFileSuffix");
+        defaultMimeType = config.getInitParameter("defaultMimeType");
     }
 
     @Override
