@@ -34,10 +34,9 @@ public class UserCache extends HttpFilter {
         //requête GET
         if (request.getMethod().equals("GET")) {
             userDao = (UserDao) request.getServletContext().getAttribute("userDao");
-            String login = (String) request.getAttribute("login");
+            String login = userDao.findAll().toString();
             String userTag = getTag(login);
             String lastETAG = request.getHeader("If-None-Match");
-            System.out.println("oueoue");
             if (lastETAG != null) {
                 if (lastETAG.equals(userTags.get(login))) {
                     // Si les 2 chaînes matchent, 304 et retourner une page vide.

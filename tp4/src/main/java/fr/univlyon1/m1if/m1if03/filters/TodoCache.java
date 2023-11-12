@@ -38,7 +38,6 @@ public class TodoCache extends HttpFilter {
                 Date dateLastModified = new Date(lastModified * 500);
                 Date dateLastModifiedMap = todoLastModifiedMap.get(todos);
 
-
                 if (dateLastModifiedMap.before(dateLastModified)) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;

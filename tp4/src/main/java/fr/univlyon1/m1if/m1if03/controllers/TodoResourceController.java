@@ -55,42 +55,40 @@ public class TodoResourceController extends HttpServlet {
             Todo todo = todoRessource.readOne(url[1]);
             TodoResponseDto todoDto = todoMapper.toDto(todo);
             switch (url.length) {
-                case 2: // renvoie un DTO de Todo (avec toutes les infos le concernant pour pouvoir le templater dans la vue)
+                case 2 -> { // renvoie un DTO de Todo (avec toutes les infos le concernant pour pouvoir le templater dans la vue)
                     request.setAttribute("model", todoDto);
                     request.setAttribute("view", "todos");
-                    break;
-                case 3: // renvoie une propriété d'un todo
+            }
+                case 3 -> { // renvoie une propriété d'un todo
                     switch (url[2]) {
-                        case "title":
+                        case "title" -> {
                             request.setAttribute("model", new TodoResponseDto(todoDto.getTitle(), todoDto.getHash(), null, null));
                             request.setAttribute("view", "todo");
-                            break;
-                        case "hash":
-                            request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, null));
-                            request.setAttribute("view", "todo");
-                            break;
-                        case "assignee":
+                        }
+                        case "assignee" -> {
                             request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), todoDto.getAssignee(), null));
                             request.setAttribute("view", "todo");
-                            break;
-                        case "status":
+                        }
+                        case "status" -> {
                             request.setAttribute("model", new TodoResponseDto(null, todoDto.getHash(), null, todoDto.getCompleted()));
                             request.setAttribute("view", "todo");
-                            break;
-                        default:
+                        }
+                        default -> {
                             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                        }
 
                     }
-                    break;
-                default: // redirige vers l'URL qui devrait correspondre à la sous-priorité demandée (qu'elle existe ou pas ne concerne pas ce contrôleur)
+                }
+                default -> {// redirige vers l'URL qui devrait correspondre à la sous-priorité demandée (qu'elle existe ou pas ne concerne pas ce contrôleur)
                     // Construction de la fin de l'URL vers laquelle rediriger
                     if (url[2].equals("assignee")) {
                         // Construction de la fin de l'URL vers laquelle rediriger
                         String urlEnd = UrlUtils.getUrlEnd(request, 3);
-                        response.sendRedirect(request.getContextPath() + todo.getAssignee() + urlEnd);
+                        response.sendRedirect(request.getContextPath() + "/users" + urlEnd);
                     } else {
                         response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Trop de paramètres dans l'URI.");
                     }
+                }
 
             }
         } catch (IllegalArgumentException ex) {
@@ -103,33 +101,36 @@ public class TodoResourceController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String[] url = UrlUtils.getUrlParts(request);
 
-        switch (url.length) {
-            case 1:
+        if (url.length == 1) {
 
-                TodoRequestDto body = (TodoRequestDto) request.getAttribute("dto");
+            TodoRequestDto body = (TodoRequestDto) request.getAttribute("dto");
 
-                String title = body.getTitle();
-                String creator = body.getCreator();
-                String assignee = body.getAssignee();
+            String title = body.getTitle();
+            String creator = body.getCreator();
+            String assignee = body.getAssignee();
 
-                try {
-                    List<Integer> assignedTo = new ArrayList<Integer>();
-                    for(Todo todo: todoDao.findByAssignee((String) request.getAttribute("login"))) {
-                        assignedTo.add(todo.hashCode());
-                    }
-                    String authToken = TodosM1if03JwtHelper.generateToken(assignee, assignedTo, request);
-                    response.setHeader("Authorization", "Bearer " + authToken);
-
-                    int id = todoRessource.create(title, creator);
-                    response.setHeader("Location", "todos/" + id);
-                    response.setStatus(HttpServletResponse.SC_CREATED);
-                } catch (NameAlreadyBoundException | ForbiddenLoginException e) {
-                    throw new RuntimeException(e);
+            try {
+                List<Integer> assignedTo = new ArrayList<Integer>();
+                for (Todo todo : todoDao.findByAssignee((String) request.getAttribute("login"))) {
+                    assignedTo.add(todo.hashCode());
                 }
+                String authToken = TodosM1if03JwtHelper.generateToken(assignee, assignedTo, request);
+                response.setHeader("Authorization", "Bearer " + authToken);
 
-                break;
-            default:
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                int id = todoRessource.create(title, creator);
+                response.setHeader("Location", "todos/" + id);
+                response.setStatus(HttpServletResponse.SC_CREATED);
+            } catch (NameAlreadyBoundException | ForbiddenLoginException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        } else if (url.length == 2) {
+            if(url[1].equals("toggleStatus")) {
+                getServletContext().getNamedDispatcher("TodoBusinessController.java").forward(request, response);
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

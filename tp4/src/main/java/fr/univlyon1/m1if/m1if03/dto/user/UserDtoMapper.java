@@ -40,8 +40,6 @@ public class UserDtoMapper {
      * @return Un <code>UserResponseDto</code> avec tous les champs positionnés
      */
     public UserResponseDto toDto(User user) {
-        //TODO Virer ça...
-        todoDao.findAll().forEach(todo -> todo.setAssignee(user.getLogin()));
         List<Integer> ownedTodos =
                 todoDao.findByAssignee(user.getLogin())
                         .stream()
