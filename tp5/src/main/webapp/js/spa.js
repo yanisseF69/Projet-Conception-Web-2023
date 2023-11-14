@@ -122,6 +122,10 @@ function deco() {
 setInterval(getNumberOfUsers, 5000);
 // </editor-fold>
 
-function renderMustacheTemplate(scriptId, data, targetElementID) {
-
+function renderTemplates(scriptId, data, targetElementID) {
+    const templateScript = document.getElementById(scriptId);
+    if (!templateScript) {
+        console.error(`Le script avec l'id ${scriptId} n'a pas été trouvé.`);
+        return;
+    }
 }
