@@ -21,9 +21,6 @@
         </div>
     </div>
 
-    <!--
-        TODO faire en sorte de n'afficher la dernière div que si l'utilisateur est connecté.
-    -->
 </header>
 
 <div class="wrapper">
@@ -35,9 +32,6 @@
             <li class="requiresConnection nav-item"><a href='#monCompte'>Mon compte</a></li>
             <li class="requiresConnection nav-item"><a href='#todoList'>Todos</a></li>
         </ul>
-        <!--
-            TODO n'afficher "Mon compte" et "Todos" que si l'utilisateur est connecté.
-        -->
     </aside>
 
     <article class="contenu">
@@ -104,9 +98,8 @@
 
         <section id='todoList' class='inactive'>
             <script id="templateTodoList" type="x-tmpl-mustache">
-                <meta http-equiv="refresh" content="5">
                 <h2><strong>Liste des todos</strong></h2>
-                <p>Il y a actuellement <strong>{{count}}</strong> todo(s).</p>
+                <p>Il y a actuellement <strong>{{todos.length}}</strong> todo(s).</p>
                 <div class="list">
                 <table>
                     <tr>
@@ -124,7 +117,7 @@
                     <tr>
                     {{/special}}
                         <td>&#x2611;</td>
-                        <td>{{title}}}</td>
+                        <td>{{title}}</td>
                         <td><a href="#user/{{assignee}}">{{assignee}}</a></td>
                         <td><button type="button" class="btn btn-secondary" id="{{id}}_removeUser_button">Me retirer ce todo</button></td>
                         <td><button type="button" class="btn btn-secondary" id="{{id}}_removeTodo_button">Supprimer ce todo</button></td>
@@ -179,6 +172,15 @@
         ]
     };
 
+    const usersData = {
+        users: [
+            {login: "toto", name: "Toto"},
+            {login: "yaya", name: "Yanisse"},
+            {login: "rayonx", name: "Rayane"}
+        ]
+
+    }
+
     const todoData = {
         todos: [
             { id: "idTodo1", title: "Titre du premier todo", assignee: "yaya", special: true, completed: true },
@@ -190,6 +192,11 @@
     const accountTemplate = document.getElementById("templateUser").innerHTML;
     const renderedUser = Mustache.render(accountTemplate, accountData);
     document.getElementById("monCompte").innerHTML = renderedUser;
+
+    const todolistTemplate = document.getElementById("templateTodoList").innerHTML;
+    const renderedTodoList = Mustache.render(todolistTemplate, todoData);
+    document.getElementById("todoList").innerHTML = renderedTodoList;
+
 
 
 
