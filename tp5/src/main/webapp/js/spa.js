@@ -2,6 +2,19 @@
  * Placez ici les scripts qui seront exécutés côté client pour rendre l'application côté client fonctionnelle.
  */
 
+const mock_data = {
+    users: [
+        {login: "yaya", password: "yayaaussi", name: "Yanisse"},
+        {login: "rayonx", password: "rayonxaussi", name: "Rayanou"}
+    ],
+    todos: [
+        {title: "Mon beau todo", assignee: "users/yaya", status: "Not done"},
+        {title: "Faire la vaisselle", assignee: "users/rayonx", status: "Not done"},
+        {title: "Manger", assignee: "users/yaya", status: "Not done"},
+    ]
+}
+console.log(mock_data)
+
 // <editor-fold desc="Gestion de l'affichage">
 /**
  * Fait basculer la visibilité des éléments affichés quand le hash change.<br>
