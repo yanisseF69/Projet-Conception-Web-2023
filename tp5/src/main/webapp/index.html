@@ -36,8 +36,7 @@
 
     <article class="contenu">
         <div id="requestResult" class="alert"></div>
-
-        <section id='index' class='active'>
+        <section id="index" class='active'>
             <script id="templateUsers" type="x-tmpl-mustache">
                 <p> A FAIRE LA RECHARGE !!!!!!!!!!!!!!!!!!!! </p>
                 <h2>L'application des trucs à faire</h2>
@@ -50,10 +49,10 @@
                     </tr>
                     {{#users}}
                     <tr>
-                        <td>{{name}}}</td>
+                        <td>{{name}}</td>
                         <td><a href="#user/{{login}}">{{login}}</a></td>
                     </tr>
-                {{/todos}}
+                    {{/users}}
                 </table>
                 </div>
             </script>
@@ -205,14 +204,16 @@
         ]
     };
 
+    function renderTemplate(templateId, data, targetId) {
+        const template = document.getElementById(templateId).innerHTML;
+        Mustache.parse(template);
+        document.getElementById(targetId).innerHTML = Mustache.render(template, data);
+    }
 
-    const accountTemplate = document.getElementById("templateUser").innerHTML;
-    const renderedUser = Mustache.render(accountTemplate, accountData);
-    document.getElementById("monCompte").innerHTML = renderedUser;
+    renderTemplate("templateUsers", usersData, "index");
+    renderTemplate("templateUser", accountData, "monCompte");
+    renderTemplate("templateTodoList", todoData, "todoList");
 
-    const todolistTemplate = document.getElementById("templateTodoList").innerHTML;
-    const renderedTodoList = Mustache.render(todolistTemplate, todoData);
-    document.getElementById("todoList").innerHTML = renderedTodoList;
 
 
 
