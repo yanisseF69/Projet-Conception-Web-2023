@@ -14,10 +14,13 @@
 <body>
 <header>
     <h1 class="header-titre">MIF-TODOS</h1>
-    <div class="wrapper">
-        <p class="header-user requiresConnection">Bonjour <strong>Toto</strong></p>
-        <p class="header-deco requiresConnection"><a href='#deco'>Déconnexion</a></p>
+    <div class="requiresConnection">
+        <div class="wrapper">
+            <p class="header-user requiresConnection">Bonjour <strong>Toto</strong></p>
+            <p class="header-deco requiresConnection"><a href='#deco'>Déconnexion</a></p>
+        </div>
     </div>
+
     <!--
         TODO faire en sorte de n'afficher la dernière div que si l'utilisateur est connecté.
     -->
@@ -174,5 +177,24 @@
 <script src="js/vendor/popper.min.js"></script>
 <script src="js/bootstrap.js"></script>
 
+<!-- Script JavaScript pour charger Mustache et exécuter le rendu -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.2.0/mustache.min.js"></script>
+
+<script>
+    const mockData = {
+        users: [
+            {login: "yaya", password: "yayaaussi", name: "Yanisse"},
+            {login: "rayonx", password: "rayonxaussi", name: "Rayanou"}
+        ],
+        todos: [
+            {title: "Mon beau todo", assignee: "users/yaya", status: "Not done"},
+            {title: "Faire la vaisselle", assignee: "users/rayonx", status: "Not done"},
+            {title: "Manger", assignee: "users/yaya", status: "Not done"},
+        ]
+    }
+
+
+
+</script>
 </body>
 </html>
