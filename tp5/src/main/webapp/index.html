@@ -44,8 +44,25 @@
         <div id="requestResult" class="alert"></div>
 
         <section id='index' class='active'>
-            <h2>L'application des trucs à faire</h2>
-            <p>Actuellement : <strong id="nbUsers">...</strong> utilisateurs inscrits.</p>
+            <script id="templateUsers" type="x-tmpl-mustache">
+                <p> A FAIRE LA RECHARGE !!!!!!!!!!!!!!!!!!!! </p>
+                <h2>L'application des trucs à faire</h2>
+                <p>Actuellement : <strong id="nbUsers">{{users.lengts}}</strong> utilisateurs inscrits.</p>
+                <div class="list">
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Login</th>
+                    </tr>
+                    {{#users}}
+                    <tr>
+                        <td>{{name}}}</td>
+                        <td><a href="#user/{{login}}">{{login}}</a></td>
+                    </tr>
+                {{/todos}}
+                </table>
+                </div>
+            </script>
             <!--
                 TODO A vous de modifier cette section pour qu'elle affiche les bonnes données et qu'elle se recharge toutes les 5 secondes.
             -->
@@ -103,7 +120,7 @@
             <script id="templateTodoList" type="x-tmpl-mustache">
                 <meta http-equiv="refresh" content="5">
                 <h2><strong>Liste des todos</strong></h2>
-                <p>Il y a actuellement <strong>{{count}}</strong> todo(s).</p>
+                <p>Il y a actuellement <strong>{{todos.length}}</strong> todo(s).</p>
                 <div class="list">
                 <table>
                     <tr>
