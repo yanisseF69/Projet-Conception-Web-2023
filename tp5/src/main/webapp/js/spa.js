@@ -11,6 +11,7 @@ const mock_data = {
         {title: "Mon beau todo", assignee: "users/yaya", status: "Not done"},
         {title: "Faire la vaisselle", assignee: "users/rayonx", status: "Not done"},
         {title: "Manger", assignee: "users/yaya", status: "Not done"},
+        {title: "Etre trop bo", assignee: "users/yaya", status: "Done"},
     ]
 }
 console.log(mock_data)
