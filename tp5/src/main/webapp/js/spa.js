@@ -133,3 +133,7 @@ function deco() {
 }
 setInterval(getNumberOfUsers, 5000);
 // </editor-fold>
+
+function renderMustacheTemplate(scriptId, data, targetElementID) {
+
+}
