@@ -126,9 +126,29 @@ async function fetchUsers() {
 
 
 function deco() {
-    // TODO envoyer la requête de déconnexion
-    location.hash = "#index";
-    displayConnected(false);
+    const headers = new Headers();
+    headers.append("Authorization", sessionStorage.getItem('accessToken'));
+    headers.append("Content-Type", "application/json");
+    const body = {};
+    const requestConfig = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+        mode: "cors" // pour le cas où vous utilisez un serveur différent pour l'API et le client.
+    };
+
+    fetch(baseUrl + "users/logout", requestConfig)
+        .then((response) => {
+            if(response.status === 204) {
+                displayRequestResult("Déconnexion réussie", "alert-success");
+                location.hash = "#index";
+                displayConnected(false);
+            }
+        })
+        .catch((err) => {
+            console.error("In logout: " + err);
+        })
+
 }
 setInterval(getNumberOfUsers, 5000);
 // </editor-fold>
