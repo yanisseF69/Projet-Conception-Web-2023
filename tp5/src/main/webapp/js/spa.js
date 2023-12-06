@@ -114,6 +114,17 @@ function connect() {
         })
 }
 
+async function fetchUsers() {
+    let users = await request({ url: 'users' });
+    if (users.ok && users.headers.get("Content-type").includes("application/json")) {
+        return users.json();
+    } else {
+        throw new Error("Response is error (" + users.status + ") or does not contain JSON ("
+        + users.headers.get("Content-Type") + ").");
+    }
+}
+
+
 function deco() {
     // TODO envoyer la requête de déconnexion
     location.hash = "#index";
