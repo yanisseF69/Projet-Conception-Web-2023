@@ -27,6 +27,26 @@ function show(hash) {
 }
 
 /**
+ * Fetch the users.
+ */
+async function fetchUsers() {
+    let users = await request({ url: 'users' });
+    if (users.ok && users.headers.get("Content-Type").includes("application/json")) {
+        return users.json();
+    } else {
+        throw new Error("Response is error (" + users.status + ") or does not contain JSON ("
+            + users.headers.get("Content-Type") + ").");
+    }
+}
+
+// Fonction pour mettre à jour les informations de l'utilisateur
+function modifyUser(name='', password='') {
+
+
+}
+
+
+/**
  * Affiche pendant 10 secondes un message sur l'interface indiquant le résultat de la dernière opération.
  * @param text Le texte du message à afficher
  * @param cssClass La classe CSS dans laquelle afficher le message (défaut = alert-info)
@@ -152,6 +172,9 @@ function deco() {
         .catch((err) => {
             console.error("In logout: " + err);
         })
+    // TODO envoyer la requête de déconnexion
+    location.hash = "#index";
+    displayConnected(false);
 
 }
 setInterval(getNumberOfUsers, 5000);
