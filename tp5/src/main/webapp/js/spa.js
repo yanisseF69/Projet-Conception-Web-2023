@@ -18,6 +18,26 @@ function show(hash) {
 }
 
 /**
+ * Fetch the users.
+ */
+async function fetchUsers() {
+    let users = await request({ url: 'users' });
+    if (users.ok && users.headers.get("Content-Type").includes("application/json")) {
+        return users.json();
+    } else {
+        throw new Error("Response is error (" + users.status + ") or does not contain JSON ("
+            + users.headers.get("Content-Type") + ").");
+    }
+}
+
+// Fonction pour mettre à jour les informations de l'utilisateur
+function modifyUser(name='', password='') {
+
+
+}
+
+
+/**
  * Affiche pendant 10 secondes un message sur l'interface indiquant le résultat de la dernière opération.
  * @param text Le texte du message à afficher
  * @param cssClass La classe CSS dans laquelle afficher le message (défaut = alert-info)
@@ -114,41 +134,10 @@ function connect() {
         })
 }
 
-async function fetchUsers() {
-    let users = await request({ url: 'users' });
-    if (users.ok && users.headers.get("Content-type").includes("application/json")) {
-        return users.json();
-    } else {
-        throw new Error("Response is error (" + users.status + ") or does not contain JSON ("
-        + users.headers.get("Content-Type") + ").");
-    }
-}
-
-
 function deco() {
-    const headers = new Headers();
-    headers.append("Authorization", sessionStorage.getItem('accessToken'));
-    headers.append("Content-Type", "application/json");
-    const body = {};
-    const requestConfig = {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body),
-        mode: "cors" // pour le cas où vous utilisez un serveur différent pour l'API et le client.
-    };
-
-    fetch(baseUrl + "users/logout", requestConfig)
-        .then((response) => {
-            if(response.status === 204) {
-                displayRequestResult("Déconnexion réussie", "alert-success");
-                location.hash = "#index";
-                displayConnected(false);
-            }
-        })
-        .catch((err) => {
-            console.error("In logout: " + err);
-        })
-
+    // TODO envoyer la requête de déconnexion
+    location.hash = "#index";
+    displayConnected(false);
 }
 setInterval(getNumberOfUsers, 5000);
 // </editor-fold>
