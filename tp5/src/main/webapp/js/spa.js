@@ -3,6 +3,15 @@
  */
 
 // <editor-fold desc="Gestion de l'affichage">
+
+var userAuth = {
+    login: '',
+    name: '',
+    authorisation:'',
+    isAuthenticated: false,
+    todoAssigned: [],
+}
+
 /**
  * Fait basculer la visibilité des éléments affichés quand le hash change.<br>
  * Passe l'élément actif en inactif et l'élément correspondant au hash en actif.
@@ -99,10 +108,13 @@ function connect() {
     fetch(baseUrl + "users/login", requestConfig)
         .then((response) => {
             if(response.status === 204) {
-                displayRequestResult("Connexion réussie", "alert-success");
                 console.log("In login: Authorization = " + response.headers.get("Authorization"));
-                location.hash = "#index";
+                userAuth.login = body.login;
+                userAuth.authorisation = response.headers.get("Authorization");
+                userAuth.isAuthenticated = true;
+                displayRequestResult("Connexion réussie", "alert-success");
                 displayConnected(true);
+                location.hash = "#index";
             } else {
                 displayRequestResult("Connexion refusée ou impossible", "alert-danger");
                 displayConnected(false);
@@ -129,6 +141,9 @@ function deco() {
     fetch(baseUrl + "users/logout", requestConfig)
         .then((response) => {
             if(response.status === 204) {
+                userAuth.login = '';
+                userAuth.authorisation = '';
+                userAuth.isAuthenticated = false;
                 displayRequestResult("Déconnexion réussie", "alert-success");
                 location.hash = "#index";
                 displayConnected(false);
