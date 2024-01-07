@@ -8,18 +8,22 @@
     <link rel="stylesheet" href="css/bootstrap.css">
 
     <link rel="stylesheet" href="css/app.css">
-    <script type="application/javascript" src="js/api-base.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
     <script type="application/javascript" src="js/spa.js"></script>
+    <script type="application/javascript" src="js/api-base.js"></script>
 </head>
 <body>
 <header>
     <h1 class="header-titre">MIF-TODOS</h1>
-    <div class="requiresConnection">
-        <div class="wrapper">
-            <p class="header-user requiresConnection">Bonjour <strong>Toto</strong></p>
-            <p class="header-deco requiresConnection"><a href='#deco'>Déconnexion</a></p>
+    <div class="wrapper">
+        <div class="requiresConnection" id="renderName">
+
         </div>
     </div>
+    <script id="templateName" type="x-tmpl-mustache">
+        <p className="header-user requiresConnection">Bonjour <strong>{{.}}</strong> </p>
+        <p className="header-deco requiresConnection"><a href='#deco'>Déconnexion</a></p>
+    </script>
 
 </header>
 
@@ -28,38 +32,30 @@
         <h2>Menu</h2>
         <ul class="nav flex-column">
             <li class="nav-item"><a href='#index'>Accueil</a></li>
-            <li class="nav-item"><a href='#connect'>Connexion</a></li>
-            <li class="requiresConnection nav-item"><a href='#monCompte'>Mon compte</a></li>
-            <li class="requiresConnection nav-item"><a href='#todoList'>Todos</a></li>
+            <li class="nav-item" id="connexion"><a href='#connect'>Connexion</a></li>
+            <li class="requiresConnection nav-item" onclick="renderAccount()"><a href='#monCompte'>Mon compte</a></li>
+            <li class="requiresConnection nav-item" onclick="renderTodos()"><a href='#todoList'>Todos</a></li>
         </ul>
     </aside>
 
     <article class="contenu">
         <div id="requestResult" class="alert"></div>
         <section id="index" class='active'>
-            <script id="templateUsers" type="x-tmpl-mustache">
-                <p> A FAIRE LA RECHARGE !!!!!!!!!!!!!!!!!!!! </p>
-                <h2>L'application des trucs à faire</h2>
-                <p>Actuellement : <strong id="nbUsers">{{users.lengts}}</strong> utilisateurs inscrits.</p>
-                <div class="list">
-                <table>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Login</th>
-                    </tr>
-                    {{#users}}
-                    <tr>
-                        <td>{{name}}</td>
-                        <td><a href="#user/{{login}}">{{login}}</a></td>
-                    </tr>
-                    {{/users}}
-                </table>
-                </div>
-            </script>
+            <div id="renderedUsers"></div>
+
             <!--
                 TODO A vous de modifier cette section pour qu'elle affiche les bonnes données et qu'elle se recharge toutes les 5 secondes.
             -->
         </section>
+
+        <script id="templateUsers" type="x-tmpl-mustache">
+            <h2>L'application des trucs à faire</h2>
+            <p>Actuellement : <strong id="nbUsers">...</strong> utilisateurs inscrits.</p>
+            <div class="list">
+            <table>
+            </table>
+            </div>
+        </script>
 
         <section id='connect' class='inactive'>
             <h2>Connectez-vous pour accéder aux todos</h2>
@@ -68,9 +64,6 @@
                     <tr><td><label for="password_input">Mot de passe :</label></td><td><input class="form-control" type="password" id="password_input"></td></tr>
                     <tr><td><button type="button" class="btn btn-secondary" id="login_button" onclick="connect()">Connexion</button></td></tr>
                 </table>
-            <!--
-                TODO envoyer la requête puis récupérer et stocker le token.
-            -->
         </section>
 
         <section id='deco' class='inactive'>
@@ -78,76 +71,44 @@
             <p>Cliquez ici pour vous déconnecter :
                 <button type="button" class="btn btn-secondary" id="logout_button" onclick="deco()">Déconnexion</button>
             </p>
-            <!--
-                TODO envoyer la requête de logout et afficher la page d'accueil sans les éléments pour lesquels il faut être connecté.
-            -->
         </section>
 
         <section id='monCompte' class='inactive'>
-            <script id="templateUser" type="x-tmpl-mustache">
-                <div>
-                <h2>Mon compte</h2>
-                <table id='compteList'>
-                    <tr><td>Login : </td><td><span id="login">{{login}}</span></td></tr>
-                    <tr>
-                        <td>Nom : </td>
-                        <td><span id="nom_update_input" contenteditable="true">{{name}}</span></td>
-                        <td><button type="button" class="btn btn-secondary" id="user_update_button"
-                         onclick="modifyUser(document.getElementById("nom_update_input", '')>Modifier</button></td>
-                    </tr>
-                    <tr>
-                        <td><label for="password_update_input">Mot de passe :</label></td>
-                        <td><input class="form-control" type="password" id="password_update_input"></td>
-                        <td><button type="button" class="btn btn-secondary" id="password_update_button"
-                        onclick=modifyUser('', document.getElementById("password_update_input")>Modifier</button></td>
-                    </tr>
-                </table>
-                <div>Assigné à :
-                    <ul>
-                        {{#assignedTo}}
-                            <li><a href="#todoList/{{id}}">{{title}}</a></li>
-                        {{/assignedTo}}
-                    </ul>
-                </div>
-            </script>
+            <div id="renderUser"></div>
+
         </section>
+
+        <script id="templateUser" type="x-tmpl-mustache">
+            <div>
+            <h2>Mon compte</h2>
+            <table id='compteList'>
+                <tr><td>Login : </td><td><span id="login">{{login}}</span></td></tr>
+                <tr>
+                    <td>Nom : </td>
+                    <td><span id="nom_update_input" contenteditable="true">{{name}}</span></td>
+                    <td><button type="button" class="btn btn-secondary" id="user_update_button"
+                     onclick="modifyUser(document.getElementById('nom_update_input').textContent, '')">Modifier</button></td>
+                </tr>
+                <tr>
+                    <td><label for="password_update_input">Mot de passe :</label></td>
+                    <td><input class="form-control" type="password" id="password_update_input"></td>
+                    <td><button type="button" class="btn btn-secondary" id="password_update_button"
+                    onclick="modifyUser('', document.getElementById('password_update_input').value)">Modifier</button></td>
+                </tr>
+            </table>
+            <div>Assigné à :
+                <ul>
+                    {{#assignedTo}}
+                        <li><a href="#todoList/{{hash}}">{{title}}</a></li>
+                    {{/assignedTo}}
+                </ul>
+            </div>
+        </script>
 
 
 
         <section id='todoList' class='inactive'>
-            <script id="templateTodoList" type="x-tmpl-mustache">
-                <h2><strong>Liste des todos</strong></h2>
-                <p>Il y a actuellement <strong>{{todos.length}}</strong> todo(s).</p>
-                <div class="list">
-                <table>
-                    <tr>
-                        <th></th>
-                        <th>Titre</th>
-                        <th>Assigné à</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    {{#todos}}
-                    {{#special}}
-                    <tr class="special">
-                    {{/special}}
-                    {{^special}}
-                    <tr>
-                    {{/special}}
-                        <td>&#x2611;</td>
-                        <td>{{title}}</td>
-                        <td><a href="#user/{{assignee}}">{{assignee}}</a></td>
-                        <td><button type="button" class="btn btn-secondary" id="{{id}}_removeUser_button">Me retirer ce todo</button></td>
-                        <td><button type="button" class="btn btn-secondary" id="{{id}}_removeTodo_button">Supprimer ce todo</button></td>
-                    </tr>
-                {{/todos}}
-                </table>
-                </div>
-            </script>
-            <!--
-                TODO mettre en place une boucle sur les todos et afficher les données.
-                TODO recharger les informations toutes les 5 secondes.
-            -->
+            <div id="renderTodoList"></div>
 
             <div class="container d-flex">
                 <div class ="row ">
@@ -158,11 +119,68 @@
                         <input class="form-control" type="text" id="text" size="50">
                     </div>
                     <div class="col-sm-2">
-                        <button type="button" class="btn btn-secondary" id="addTodo_button">Créer un nouveau todo</button>
+                        <button type="button" class="btn btn-secondary" id="addTodo_button"
+                                onclick="addTodo(document.getElementById('text').value)">Créer un nouveau todo</button>
                     </div>
                 </div>
             </div>
         </section>
+
+        <script id="templateTodoList" type="x-tmpl-mustache">
+            <h2><strong>Liste des todos</strong></h2>
+            <p>Il y a actuellement <strong>{{todos.length}}</strong> todo(s).</p>
+            <div class="list">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Titre</th>
+                    <th>Assigné à</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                {{#todos}}
+                {{#special}}
+                <tr class="special">
+                {{/special}}
+                {{^special}}
+                <tr>
+                {{/special}}
+                    {{#completed}}
+                        <td {{#toMe}}onclick="toggleStatus({{hash}})"{{/toMe}}>&#x2611;</td>
+                    {{/completed}} {{^completed}}
+                        <td {{#toMe}}onclick="toggleStatus({{hash}})"{{/toMe}}>&#x2610;</td>
+                    {{/completed}}
+                        <td id="todoTitle_{{hash}}" contenteditable="true">{{title}}</td>
+                    {{#assignee}}
+                    <td><a href="#user/{{assigneeLogin}}" onmouseover="showPopUp({{hash}})" onmouseout="hidePopUp({{hash}})">{{assigneeLogin}}</a></td>
+                    <div class="popup" id="popUpName_{{hash}}">
+                        {{assigneeName}}
+                    </div>
+                    {{#toMe}}
+                        <td><button type="button" class="btn btn-secondary" id="{{hash}}_removeUser_button"
+                            onclick="removeUser({{hash}})">Me retirer ce todo</button></td>
+                    {{/toMe}} {{^toMe}}
+                        <td><button type="button" class="btn btn-secondary" id="{{hash}}_assignUser_button"
+                            onclick="assignUser({{hash}})">M'attribuer ce todo</button></td>
+                    {{/toMe}}
+                    {{/assignee}} {{^assignee}}
+                        <td><a onmouseover="showPopUp({{hash}})" onmouseout="hidePopUp({{hash}})">{{assigneeLogin}}</a></td>
+                        <div class="popup" id="popUpName_{{hash}}">
+                            {{assigneeName}}
+                        </div>
+                        <td><button type="button" class="btn btn-secondary" id="{{hash}}_assignUser_button"
+                            onclick="assignUser({{hash}})">M'attribuer ce todo</button></td>
+                    {{/assignee}}
+                        <td><button type="button" class="btn btn-secondary" id="{{hash}}_removeTodo_button"
+                            onclick="removeTodo({{hash}})">Supprimer ce todo</button></td>
+                        <td><button type="button" class="btn btn-secondary" id="title_update_button"
+                     onclick="modifyTitle(document.getElementById('todoTitle_{{hash}}').textContent, {{hash}})">Modifier le titre</button></td>
+                </tr>
+                </tr>
+            {{/todos}}
+            </table>
+            </div>
+        </script>
     </article>
 </div>
 
@@ -177,44 +195,11 @@
 <script src="js/vendor/popper.min.js"></script>
 <script src="js/bootstrap.js"></script>
 
-<!-- Script JavaScript pour charger Mustache et exécuter le rendu -->
-<script src="https://unpkg.com/mustache@latest"></script>
-
 <script>
-    const accountData = {
-        login: "yaya",
-        name: "Yaya",
-        assignedTo: [
-            { id: "idTodo1", title: "Titre du premier todo" },
-            { id: "idTodo3", title: "Titre du troisième todo" },
-        ]
-    };
-
-    const usersData = fetchUsers();
-
-    const todoData = {
-        todos: [
-            { id: "idTodo1", title: "Titre du premier todo", assignee: "yaya", special: true, completed: true },
-            { id: "idTodo2", title: "Titre du deuxième todo", assignee: "yaya", special: false, completed: false },
-        ]
-    };
-
-    function renderTemplate(templateId, data, targetId) {
-        const template = document.getElementById(templateId).innerHTML;
-        Mustache.parse(template);
-        document.getElementById(targetId).innerHTML = Mustache.render(template, data);
-    }
-
-    renderTemplate("templateUsers", usersData, "index");
-    renderTemplate("templateUser", accountData, "monCompte");
-    renderTemplate("templateTodoList", todoData, "todoList");
-
-
-    document.getElementById("user_update_button").addEventListener("click", updateUser);
-    document.getElementById("password_update_button").addEventListener("click", updateUser);
-
-
-
+    document.addEventListener("DOMContentLoaded", function() {
+        renderIndex();
+    });
 </script>
+
 </body>
 </html>
