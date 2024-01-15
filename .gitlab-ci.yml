@@ -30,4 +30,4 @@ deploy:
   script:
   - cd $TP_DIRECTORY
   - mvn clean package
-  - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/todos.war gitlabci@192.168.75.47:/opt/tomcat/webapps/$VM_TARGET.war
+  - scp -o StrictHostKeyChecking=no -i $CI_SSH_KEY ./target/$LOCAL_TARGET gitlabci@192.168.75.47:/opt/tomcat/webapps/$VM_TARGET.war
