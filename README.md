@@ -37,7 +37,7 @@ Dans tous les cas, n'oubliez pas d'ajouter vos enseignants en tant que reporters
 On a réduit le nombre de resources critiques à l'aide de async.
 
 **Minification (et async et cdn)** :
-* temps de chargement de la page html initiale : ms Amélioration : %
-* temps d'affichage de l'appshell : ms Amélioration : %
-* temps d'affichage du chemin critique de rendu (CRP) : ms Amélioration : %
+* temps de chargement de la page html initiale : 10ms Amélioration : 70%
+* temps d'affichage de l'appshell : 240ms Amélioration : 38%
+* temps d'affichage du chemin critique de rendu (CRP) : 268ms Amélioration : 32%
 
